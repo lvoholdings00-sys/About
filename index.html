@@ -91,7 +91,7 @@
       text-transform: uppercase;
     }
 
-    /* HERO — identical layout, about framing */
+    /* HERO */
     .hero {
       min-height: 100vh;
       display: flex;
@@ -186,7 +186,7 @@
       white-space: nowrap;
     }
 
-    /* WHO WE ARE — full-width prose block */
+    /* WHO WE ARE */
     .who {
       max-width: 720px;
       margin: 0 auto;
@@ -207,7 +207,7 @@
       color: var(--chrome);
     }
 
-    /* VALUES — two-column pull quotes */
+    /* VALUES */
     .values {
       max-width: 1000px;
       margin: 0 auto;
@@ -264,7 +264,7 @@
       color: var(--dim);
     }
 
-    /* TIMELINE / FOUNDING STORY */
+    /* TIMELINE */
     .story {
       max-width: 680px;
       margin: 0 auto;
@@ -309,7 +309,6 @@
       letter-spacing: 0.2em;
       color: var(--red-hi);
     }
-    .story-content {}
     .story-label {
       font-family: 'Cinzel', serif;
       font-size: 0.7rem;
@@ -326,7 +325,7 @@
       color: var(--dim);
     }
 
-    /* CLOSING STATEMENT */
+    /* CLOSING */
     .closing {
       padding: 4rem 2rem 7rem;
       text-align: center;
@@ -392,6 +391,12 @@
       color: rgba(136,136,128,0.4);
     }
 
+    /* SCRAMBLE CHARS */
+    .scramble-char {
+      display: inline-block;
+      will-change: contents;
+    }
+
     /* ANIMATIONS */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(28px); }
@@ -438,7 +443,6 @@
       <span class="nav-context">About Us</span>
     </nav>
 
-    <!-- HERO — same logo/title/subtitle positions -->
     <section class="hero">
       <img class="hero-logo" src="assets/logo.png" alt="LVO Holdings"/>
       <p class="hero-eyebrow">Est. 2026 · Texas, United States</p>
@@ -447,10 +451,10 @@
       <div class="hero-rule"></div>
     </section>
 
-    <div class="section-divider reveal"><span>Who We Are</span></div>
+    <div class="section-divider reveal"><span data-scramble>Who We Are</span></div>
 
     <section class="who">
-      <p class="who-body reveal">
+      <p class="who-body reveal" data-scramble-block>
         LVO Holdings is a <em>private holding company</em> rooted in the United States —
         built to own, operate, and steward assets across real estate, social infrastructure,
         and strategic capital ventures. We are not a firm that chases trends.
@@ -458,32 +462,32 @@
       </p>
     </section>
 
-    <div class="section-divider reveal"><span>What We Stand For</span></div>
+    <div class="section-divider reveal"><span data-scramble>What We Stand For</span></div>
 
     <section class="values">
       <div class="value-item reveal">
         <span class="value-num">I</span>
-        <p class="value-heading">Legacy Over Liquidity</p>
-        <p class="value-text">We measure success in decades, not quarters. Every decision is made with the next generation in mind — not the next exit.</p>
+        <p class="value-heading" data-scramble>Legacy Over Liquidity</p>
+        <p class="value-text" data-scramble-block>We measure success in decades, not quarters. Every decision is made with the next generation in mind — not the next exit.</p>
       </div>
       <div class="value-item reveal" style="transition-delay:0.1s">
         <span class="value-num">II</span>
-        <p class="value-heading">Discretion By Design</p>
-        <p class="value-text">We do not court attention. The work speaks through results — quietly, consistently, without announcement.</p>
+        <p class="value-heading" data-scramble>Discretion By Design</p>
+        <p class="value-text" data-scramble-block>We do not court attention. The work speaks through results — quietly, consistently, without announcement.</p>
       </div>
       <div class="value-item reveal" style="transition-delay:0.2s">
         <span class="value-num">III</span>
-        <p class="value-heading">Capital With Purpose</p>
-        <p class="value-text">Through LVO Operations, we deploy resources into social services and community infrastructure. We believe ownership carries obligation.</p>
+        <p class="value-heading" data-scramble>Capital With Purpose</p>
+        <p class="value-text" data-scramble-block>Through LVO Operations, we deploy resources into social services and community infrastructure. We believe ownership carries obligation.</p>
       </div>
       <div class="value-item reveal" style="transition-delay:0.3s">
         <span class="value-num">IV</span>
-        <p class="value-heading">Access Is Earned</p>
-        <p class="value-text">Our Alliance arm moves on trust and track record — not pitch decks. Partnerships are built on shared values before shared returns.</p>
+        <p class="value-heading" data-scramble>Access Is Earned</p>
+        <p class="value-text" data-scramble-block>Our Alliance arm moves on trust and track record — not pitch decks. Partnerships are built on shared values before shared returns.</p>
       </div>
     </section>
 
-    <div class="section-divider reveal"><span>Our Foundation</span></div>
+    <div class="section-divider reveal"><span data-scramble>Our Foundation</span></div>
 
     <section class="story">
       <div class="story-line reveal">
@@ -492,8 +496,8 @@
           <span class="story-year">2026</span>
         </div>
         <div class="story-content">
-          <p class="story-label">Founded</p>
-          <p class="story-text">LVO Holdings was established in Houston under a family trust — structured from the outset as a permanent, multigenerational holding entity rather than a fund or venture vehicle.</p>
+          <p class="story-label" data-scramble>Founded</p>
+          <p class="story-text" data-scramble-block>LVO Holdings was established in Houston under a family trust — structured from the outset as a permanent, multigenerational holding entity rather than a fund or venture vehicle.</p>
         </div>
       </div>
       <div class="story-line reveal" style="transition-delay:0.15s">
@@ -502,8 +506,8 @@
           <span class="story-year">Vindex</span>
         </div>
         <div class="story-content">
-          <p class="story-label">Real Estate</p>
-          <p class="story-text">The first pillar — Vindex — was activated to acquire and develop properties positioned for generational appreciation. Protection of tangible assets is the bedrock of the structure.</p>
+          <p class="story-label" data-scramble>Real Estate</p>
+          <p class="story-text" data-scramble-block>The first pillar — Vindex — was activated to acquire and develop properties positioned for generational appreciation. Protection of tangible assets is the bedrock of the structure.</p>
         </div>
       </div>
       <div class="story-line reveal" style="transition-delay:0.3s">
@@ -512,8 +516,8 @@
           <span class="story-year">Ops</span>
         </div>
         <div class="story-content">
-          <p class="story-label">Operations</p>
-          <p class="story-text">LVO Operations channels capital into social services and community infrastructure — because durable wealth requires durable communities. Where purpose is not the byproduct of profit, but its precondition.</p>
+          <p class="story-label" data-scramble>Operations</p>
+          <p class="story-text" data-scramble-block>LVO Operations channels capital into social services and community infrastructure — because durable wealth requires durable communities. Where purpose is not the byproduct of profit, but its precondition.</p>
         </div>
       </div>
       <div class="story-line reveal" style="transition-delay:0.45s">
@@ -522,21 +526,21 @@
           <span class="story-year">Alliance</span>
         </div>
         <div class="story-content">
-          <p class="story-label">Strategic Ventures</p>
-          <p class="story-text">LVO Alliance exists for the rare relationship — partnerships forged on aligned conviction. Capital deployed here moves slowly, intentionally, and only with full confidence in the people behind it.</p>
+          <p class="story-label" data-scramble>Strategic Ventures</p>
+          <p class="story-text" data-scramble-block>LVO Alliance exists for the rare relationship — partnerships forged on aligned conviction. Capital deployed here moves slowly, intentionally, and only with full confidence in the people behind it.</p>
         </div>
       </div>
     </section>
 
-    <div class="section-divider reveal"><span>Our Ethos</span></div>
+    <div class="section-divider reveal"><span data-scramble>Our Ethos</span></div>
 
     <section class="closing">
-      <p class="closing-quote reveal">
+      <p class="closing-quote reveal" data-scramble-block>
         We were not built to be known.<br/>
         We were built to <em>endure</em>.<br/>
         The legacy is the work.
       </p>
-      <p class="closing-attr reveal" style="transition-delay:0.2s">LVO Holdings · U.S. · Est. 2026</p>
+      <p class="closing-attr reveal" style="transition-delay:0.2s" data-scramble>LVO Holdings · U.S. · Est. 2026</p>
     </section>
 
     <footer>
@@ -550,6 +554,12 @@
   </div>
 
   <script>
+    /* ── SCRAMBLE CONFIG — edit these three values ── */
+    const SCRAMBLE_RADIUS   = 60;   // ← cursor radius in px — increase for wider effect, decrease to tighten
+    const SCRAMBLE_DURATION = 900;   // ← how long each char scrambles in ms
+    const SCRAMBLE_CHARS    = '𝐋𝐕𝐎LVO0ᛪ༙♱';
+
+    /* ── Intersection reveal ── */
     const reveals = document.querySelectorAll('.reveal');
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
@@ -557,6 +567,78 @@
       });
     }, { threshold: 0.12 });
     reveals.forEach(r => obs.observe(r));
+
+    /* ── Split text nodes into scramble-char spans ── */
+    function splitNode(textNode) {
+      const text = textNode.textContent;
+      const frag = document.createDocumentFragment();
+      for (const ch of text) {
+        if (/\S/.test(ch)) {
+          const span = document.createElement('span');
+          span.className = 'scramble-char';
+          span.dataset.orig = ch;
+          span.textContent = ch;
+          frag.appendChild(span);
+        } else {
+          frag.appendChild(document.createTextNode(ch));
+        }
+      }
+      return frag;
+    }
+
+    function splitElement(el) {
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+      const nodes = [];
+      let n;
+      while ((n = walker.nextNode())) nodes.push(n);
+      nodes.forEach(tn => {
+        if (tn.textContent.trim()) tn.parentNode.replaceChild(splitNode(tn), tn);
+      });
+    }
+
+    document.querySelectorAll('[data-scramble], [data-scramble-block]').forEach(el => {
+      splitElement(el);
+    });
+
+    /* ── Per-char scramble animation ── */
+    const activeTimers = new Map();
+
+    function scrambleChar(span) {
+      const orig = span.dataset.orig;
+      if (!orig) return;
+      if (activeTimers.has(span)) clearInterval(activeTimers.get(span));
+      const start = performance.now();
+      const id = setInterval(() => {
+        const elapsed = performance.now() - start;
+        if (elapsed < SCRAMBLE_DURATION) {
+          span.textContent = SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+        } else {
+          span.textContent = orig;
+          clearInterval(id);
+          activeTimers.delete(span);
+        }
+      }, 33);
+      activeTimers.set(span, id);
+    }
+
+    /* ── Pointer move — RAF throttled ── */
+    let raf = null;
+    document.addEventListener('pointermove', (e) => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        document.querySelectorAll('.scramble-char').forEach(span => {
+          const rect = span.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+          if (dist < SCRAMBLE_RADIUS) {
+            const proximity = 1 - dist / SCRAMBLE_RADIUS;
+            if (Math.random() < proximity * 0.35) scrambleChar(span);
+          }
+        });
+      });
+    });
   </script>
 </body>
 </html>
