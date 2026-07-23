@@ -392,6 +392,10 @@
     }
 
     /* SCRAMBLE CHARS */
+    .scramble-word {
+      display: inline-block;
+      white-space: nowrap;
+    }
     .scramble-char {
       display: inline-block;
       will-change: contents;
@@ -568,21 +572,42 @@
     }, { threshold: 0.12 });
     reveals.forEach(r => obs.observe(r));
 
-    /* ── Split text nodes into scramble-char spans ── */
+    /*
+      ── Split text nodes into scramble-char spans ──
+      FIX: characters are now grouped into a per-word wrapper
+      (.scramble-word, white-space:nowrap) so the browser can only
+      break lines between words, never in the middle of one.
+      Previously every character was its own inline-block span with
+      nothing tying them together, so the line-wrap algorithm treated
+      each letter as an independent break opportunity — that's what
+      caused words like "with" to split into "wit" / "h" across lines.
+    */
+    function buildWordSpan(word) {
+      const wordSpan = document.createElement('span');
+      wordSpan.className = 'scramble-word';
+      for (const ch of word) {
+        const charSpan = document.createElement('span');
+        charSpan.className = 'scramble-char';
+        charSpan.dataset.orig = ch;
+        charSpan.textContent = ch;
+        wordSpan.appendChild(charSpan);
+      }
+      return wordSpan;
+    }
+
     function splitNode(textNode) {
       const text = textNode.textContent;
       const frag = document.createDocumentFragment();
-      for (const ch of text) {
-        if (/\S/.test(ch)) {
-          const span = document.createElement('span');
-          span.className = 'scramble-char';
-          span.dataset.orig = ch;
-          span.textContent = ch;
-          frag.appendChild(span);
+      // Split on runs of whitespace, keeping the whitespace itself intact
+      const parts = text.split(/(\s+)/);
+      parts.forEach(part => {
+        if (part === '') return;
+        if (/^\s+$/.test(part)) {
+          frag.appendChild(document.createTextNode(part));
         } else {
-          frag.appendChild(document.createTextNode(ch));
+          frag.appendChild(buildWordSpan(part));
         }
-      }
+      });
       return frag;
     }
 
