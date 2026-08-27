@@ -401,7 +401,7 @@
       will-change: contents;
     }
 
-    /* SWIPE-RIGHT NAVIGATION OVERLAY */
+    /* SWIPE-RIGHT NAVIGATION OVERLAY (About -> Contact) */
     #swipe-transition-overlay {
       position: fixed;
       inset: 0;
@@ -412,6 +412,20 @@
       transition: opacity 0.65s cubic-bezier(0.16,1,0.3,1);
     }
     #swipe-transition-overlay.active { opacity: 1; }
+
+    /* SECRET CROSS-PAGE WATER TRANSITION (Home <-> About) */
+    #transition-stage {
+      position: fixed;
+      inset: -3%;
+      z-index: 10001;
+      display: none;
+      pointer-events: none;
+    }
+    #transition-canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
 
     /* ANIMATIONS */
     @keyframes fadeUp {
@@ -454,6 +468,9 @@
   </div>
 
   <div id="swipe-transition-overlay"></div>
+
+  <!-- Secret water-ripple transition layer, shared visual language with wearelvo.com -->
+  <div id="transition-stage"><canvas id="transition-canvas"></canvas></div>
 
   <div class="page">
     <nav>
@@ -571,6 +588,7 @@
     </footer>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
     /* ── SCRAMBLE CONFIG — edit these three values ── */
     const SCRAMBLE_RADIUS   = 20;   // ← cursor radius in px — increase for wider effect, decrease to tighten
@@ -678,7 +696,7 @@
         });
       });
     });
-    /* ── Swipe-right navigation ──
+    /* ── Swipe-right navigation (About -> Contact) ──
        Swiping (or dragging) rightward — horizontally, past a distance
        threshold, and more horizontal than vertical so normal scrolling
        is never hijacked — fades to black and then navigates to
@@ -747,6 +765,178 @@
         wheelAccumX = 0;
       }
     }, { passive: true });
+
+    /* ══════════════════════════════════════════════════════════════
+       SECRET CROSS-PAGE TRANSITION (Home <-> About)
+       Same water-ripple shader as wearelvo.com's slide engine. When
+       you arrive here via a swipe from the home page (?transition=home)
+       the ripple plays an entrance over a photo, then peels away to
+       reveal the page underneath. Swiping LEFT here does the reverse
+       and sends you back to wearelvo.com.
+
+       wearelvo.com and about.wearelvo.com are different subdomains,
+       so sessionStorage/localStorage can't hand data between them —
+       the query param is the handoff, and it's scrubbed from the
+       address bar immediately on load.
+       ══════════════════════════════════════════════════════════════ */
+    (function () {
+      const HOME_URL = 'https://wearelvo.com/';
+      // 👉 Put the photo you want to appear during the swipe here.
+      const TRANSITION_PHOTO = 'assets/about-photo.jpg';
+      const DUR = 900;
+
+      const params = new URLSearchParams(window.location.search);
+      const arrivingFromHome = params.get('transition') === 'home';
+      if (params.get('transition')) {
+        history.replaceState(null, '', window.location.pathname);
+      }
+
+      const stage = document.getElementById('transition-stage');
+      const canvas = document.getElementById('transition-canvas');
+      let three = null;
+
+      function getThree() {
+        if (three) return three;
+
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        window.addEventListener('resize', () => renderer.setSize(window.innerWidth, window.innerHeight));
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        const geo = new THREE.PlaneGeometry(2, 2);
+
+        const vertSrc = `varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position,1.0); }`;
+        const fragSrc = `
+          precision highp float;
+          uniform float uTime; uniform float uBlend;
+          uniform sampler2D uTexA; uniform sampler2D uTexB;
+          uniform int uHasTexA; uniform int uHasTexB;
+          uniform float uWaterIntensity;
+          varying vec2 vUv;
+          float wave(vec2 p, float freq, float phase){
+            return sin(p.x*freq + uTime*0.3 + phase) * cos(p.y*freq*0.8 + uTime*0.2 + phase*1.3);
+          }
+          void main(){
+            vec2 uv = vUv;
+            float w1=wave(uv,2.8,0.0), w2=wave(uv,4.9,2.1), w3=wave(uv*1.3,1.9,4.3), w4=wave(uv*0.6,6.2,1.7);
+            vec2 disp;
+            disp.x=(w1*0.5+w2*0.3+w3*0.15+w4*0.05)*uWaterIntensity;
+            disp.y=(w2*0.5+w1*0.25+w4*0.2+w3*0.05)*uWaterIntensity;
+            vec2 wuv = clamp(uv+disp, 0.0, 1.0);
+            vec3 colA = uHasTexA==1 ? texture2D(uTexA,wuv).rgb*0.82 : vec3(0.04,0.02,0.12);
+            vec3 colB = uHasTexB==1 ? texture2D(uTexB,wuv).rgb*0.82 : vec3(0.04,0.02,0.12);
+            float spec = max(0.0, w1*0.3+w2*0.2+0.2);
+            vec3 sheen = vec3(0.55,0.52,0.72)*pow(spec,6.0)*0.18;
+            vec3 col = mix(colB, colA, clamp(uBlend,0.0,1.0)) + sheen;
+            vec2 vig = uv*2.0-1.0;
+            col *= 1.0 - dot(vig,vig)*0.38;
+            float grain = fract(sin(dot(uv*997.0, vec2(12.9898,78.233)))*43758.5453);
+            col += grain*0.018 - 0.009;
+            gl_FragColor = vec4(clamp(col,0.0,1.0), 1.0);
+          }`;
+
+        const uniforms = {
+          uTime: { value: 0 }, uBlend: { value: 1 },
+          uTexA: { value: null }, uTexB: { value: null },
+          uHasTexA: { value: 0 }, uHasTexB: { value: 0 },
+          uWaterIntensity: { value: window.innerWidth <= 768 ? 0.015 : 0.028 }
+        };
+        scene.add(new THREE.Mesh(geo, new THREE.ShaderMaterial({ vertexShader: vertSrc, fragmentShader: fragSrc, uniforms })));
+
+        (function loop(ts) {
+          requestAnimationFrame(loop);
+          uniforms.uTime.value = ts * 0.001;
+          renderer.render(scene, camera);
+        })(0);
+
+        const tex = new THREE.TextureLoader().load(TRANSITION_PHOTO, t => {
+          t.minFilter = THREE.LinearFilter;
+          t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping;
+        });
+
+        three = { uniforms, tex };
+        return three;
+      }
+
+      function animateBlend(uniforms, from, to, onDone) {
+        const start = performance.now();
+        (function step() {
+          const p = Math.min((performance.now() - start) / DUR, 1);
+          uniforms.uBlend.value = from + (to - from) * (1 - Math.pow(1 - p, 3));
+          if (p < 1) requestAnimationFrame(step); else if (onDone) onDone();
+        })();
+      }
+
+      function playEntrance() {
+        const t = getThree();
+        stage.style.transition = 'none';
+        stage.style.display = 'block';
+        stage.style.opacity = '1';
+        t.uniforms.uTexA.value = t.tex; t.uniforms.uHasTexA.value = 1;
+        t.uniforms.uHasTexB.value = 0;
+        t.uniforms.uBlend.value = 0;
+        animateBlend(t.uniforms, 0, 1, () => {
+          stage.style.transition = 'opacity 0.5s ease';
+          stage.style.opacity = '0';
+          setTimeout(() => { stage.style.display = 'none'; }, 520);
+        });
+      }
+
+      let exiting = false;
+      function playExitToHome() {
+        if (exiting) return;
+        exiting = true;
+        const t = getThree();
+        stage.style.transition = 'none';
+        stage.style.display = 'block';
+        stage.style.opacity = '1';
+        t.uniforms.uTexB.value = t.tex; t.uniforms.uHasTexB.value = 1;
+        t.uniforms.uHasTexA.value = 0;
+        t.uniforms.uBlend.value = 0;
+        animateBlend(t.uniforms, 0, 1, () => {
+          window.location.href = HOME_URL + '?transition=about';
+        });
+      }
+
+      if (arrivingFromHome) window.addEventListener('load', playEntrance);
+
+      /* Swipe LEFT (opposite of the swipe-right-to-contact above) returns home */
+      const LEFT_THRESHOLD = 100;
+
+      let tsx = 0, tsy = 0, tActive = false;
+      window.addEventListener('touchstart', e => { tsx = e.touches[0].clientX; tsy = e.touches[0].clientY; tActive = true; }, { passive: true });
+      window.addEventListener('touchmove', e => {
+        if (!tActive || exiting) return;
+        const dx = e.touches[0].clientX - tsx, dy = e.touches[0].clientY - tsy;
+        if (dx < -LEFT_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.5) playExitToHome();
+      }, { passive: true });
+      window.addEventListener('touchend', () => { tActive = false; });
+
+      let dsx = 0, dsy = 0, dActive = false;
+      window.addEventListener('pointerdown', e => {
+        if (e.pointerType === 'touch') return;
+        dsx = e.clientX; dsy = e.clientY; dActive = true;
+      });
+      window.addEventListener('pointermove', e => {
+        if (!dActive || exiting || e.pointerType === 'touch') return;
+        const dx = e.clientX - dsx, dy = e.clientY - dsy;
+        if (dx < -(LEFT_THRESHOLD + 20) && Math.abs(dx) > Math.abs(dy) * 1.5) playExitToHome();
+      });
+      window.addEventListener('pointerup', () => { dActive = false; });
+
+      let wAccumLeft = 0;
+      window.addEventListener('wheel', e => {
+        if (exiting) return;
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+          wAccumLeft += e.deltaX;
+          if (wAccumLeft > LEFT_THRESHOLD * 1.4) playExitToHome();
+        } else {
+          wAccumLeft = 0;
+        }
+      }, { passive: true });
+    })();
   </script>
 </body>
 </html>
