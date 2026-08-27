@@ -1,942 +1,664 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>About · LVO Holdings</title>
-  <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --red:    #8B0000;
-      --red-hi: #CC2020;
-      --chrome: #C8C8D0;
-      --white:  #F0EEEC;
-      --dim:    #888880;
-      --bg:     #000000;
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--white);
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      overflow-x: hidden;
-      cursor: default;
-    }
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-      opacity: 0.03;
-      pointer-events: none;
-      z-index: 9999;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+<title>About · LVO Holdings</title>
+<meta name="description" content="LVO Holdings — About Legion V. Omni-Operations.">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;600;900&family=Cormorant+SC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--white:#fff;--dim:rgba(255,255,255,0.5);--dimmer:rgba(255,255,255,0.25);--purple:#7F77DD;--red-hi:#CC2020;--chrome:#C8C8D0;}
+html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Times New Roman',Georgia,serif;user-select:none;}
 
-    /* VIDEO BG */
-    .video-bg {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-    }
-    .video-bg video {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      opacity: 0.13;
-      filter: saturate(0.4) contrast(1.2);
-    }
-    .video-bg::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 0%, var(--bg) 75%);
-    }
+@media (pointer:coarse){ body{cursor:auto;} }
+@media (pointer:fine){ body{cursor:none;} }
 
-    .page {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+/* No loading screen — site-wrap is visible immediately so the handoff
+   from wearelvo.com's water-blend transition has nothing to interrupt it. */
+#site-wrap{opacity:1;}
 
-    /* NAV */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 1.8rem 4rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: linear-gradient(to bottom, rgba(5,5,5,0.95) 0%, transparent 100%);
-    }
-    .nav-mark {
-      font-family: 'Cinzel', serif;
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.35em;
-      color: var(--chrome);
-      text-decoration: none;
-    }
-    .nav-context {
-      font-family: 'Cinzel', serif;
-      font-size: 0.52rem;
-      letter-spacing: 0.35em;
-      color: var(--red-hi);
-      text-transform: uppercase;
-    }
+#stage{position:fixed;inset:-3%;z-index:0;background:transparent;will-change:transform;}
+#stage canvas{width:100%!important;height:100%!important;display:block;}
 
-    /* HERO */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 7rem 1.5rem 4rem;
-      position: relative;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -55%);
-      width: min(520px, 90vw);
-      height: min(520px, 90vw);
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(139,0,0,0.18) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .hero-logo {
-      width: clamp(160px, 48vw, 360px);
-      height: auto;
-      margin-bottom: 2.8rem;
-      opacity: 0;
-      animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
-      filter: drop-shadow(0 0 40px rgba(139,0,0,0.35)) drop-shadow(0 0 80px rgba(139,0,0,0.15));
-    }
-    .hero-eyebrow {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(0.5rem, 1.8vw, 0.6rem);
-      letter-spacing: 0.4em;
-      color: var(--red-hi);
-      text-transform: uppercase;
-      margin-bottom: 1.2rem;
-      opacity: 0;
-      animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.8s forwards;
-    }
-    .hero-title {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(2.4rem, 10vw, 5.5rem);
-      font-weight: 900;
-      letter-spacing: 0.22em;
-      color: var(--white);
-      line-height: 1;
-      margin-bottom: 0.6rem;
-      opacity: 0;
-      animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 1s forwards;
-    }
-    .hero-subtitle {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(0.48rem, 2vw, 0.72rem);
-      letter-spacing: 0.35em;
-      color: var(--dim);
-      text-transform: uppercase;
-      margin-bottom: 3.5rem;
-      opacity: 0;
-      animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 1.2s forwards;
-    }
-    .hero-rule {
-      width: 1px;
-      height: 60px;
-      background: linear-gradient(to bottom, transparent, var(--red-hi), transparent);
-      margin: 0 auto;
-      opacity: 0;
-      animation: fadeIn 1s ease 1.8s forwards;
-    }
+#title{position:fixed;top:0;left:0;right:0;z-index:35;padding:clamp(14px,3vw,28px) clamp(16px,4vw,40px);}
+#title a{text-decoration:none;color:var(--white);font-size:clamp(9px,2vw,13px);letter-spacing:0.3em;display:inline-flex;align-items:center;position:relative;}
+#title-indicator{display:inline-block;width:40px;height:1px;background:var(--white);margin-left:12px;transform-origin:left center;transform:scaleX(0.75);transition:transform 0.4s;}
+#title a:hover #title-indicator{transform:scaleX(1);}
 
-    /* DIVIDER */
-    .section-divider {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      padding: 0 2rem;
-      margin: 5rem auto;
-      max-width: 900px;
-      width: 100%;
-    }
-    .section-divider::before,
-    .section-divider::after {
-      content: '';
-      flex: 1;
-      height: 0.5px;
-      background: linear-gradient(to right, transparent, var(--red) 40%, transparent);
-    }
-    .section-divider span {
-      font-family: 'Cinzel', serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.4em;
-      color: var(--red-hi);
-      white-space: nowrap;
-    }
+#stage-nav{position:fixed;top:50%;left:0;right:0;z-index:20;transform:translateY(-50%);overflow:hidden;pointer-events:none;}
+#screen-page-nav{display:flex;list-style:none;transition:transform 0.8s cubic-bezier(0.77,0,0.175,1);will-change:transform;}
+#screen-page-nav li{flex-shrink:0;display:flex;align-items:center;justify-content:center;pointer-events:all;}
 
-    /* WHO WE ARE */
-    .who {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 0 2rem 5rem;
-      width: 100%;
-    }
-    .who-body {
-      font-size: clamp(1rem, 2.2vw, 1.18rem);
-      font-weight: 300;
-      font-style: italic;
-      line-height: 2;
-      color: rgba(240,238,236,0.78);
-      letter-spacing: 0.03em;
-      text-align: center;
-    }
-    .who-body em {
-      font-style: normal;
-      color: var(--chrome);
-    }
+#screen-controller{position:fixed;bottom:0;left:50%;z-index:35;transform:translateX(-50%);padding-bottom:clamp(12px,3vw,20px);pointer-events:all;}
+#screen-controller .inner{position:relative;display:flex;align-items:flex-end;}
+#knob{position:absolute;bottom:0;left:0;display:flex;align-items:flex-end;transition:transform 0.8s cubic-bezier(0.77,0,0.175,1);pointer-events:none;z-index:2;}
+.separator{display:block;width:1px;height:16px;background:var(--white);position:relative;bottom:-1px;}
+#controller-parent{list-style:none;display:flex;align-items:flex-end;border-bottom:0.5px solid rgba(255,255,255,0.2);}
+#controller-parent li{cursor:pointer;}
+.numerator{display:block;font-size:clamp(9px,2vw,11px);letter-spacing:0.1em;color:var(--dimmer);padding:0 clamp(5px,1.5vw,8px) 8px;transition:color 0.3s;line-height:1;}
+#controller-parent li.is-current .numerator{color:var(--white);}
+.controller-item.is-symbol .numerator{font-size:clamp(11px,2vw,15px);letter-spacing:0;padding-bottom:6px;color:var(--dimmer);}
+.controller-item.is-symbol.is-current .numerator{color:var(--white);}
 
-    /* VALUES */
-    .values {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 2rem 6rem;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      border: 0.5px solid rgba(139,0,0,0.2);
-    }
-    .value-item {
-      padding: 3rem 2.5rem;
-      border-right: 0.5px solid rgba(139,0,0,0.15);
-      border-bottom: 0.5px solid rgba(139,0,0,0.15);
-      position: relative;
-      overflow: hidden;
-      transition: background 0.4s;
-    }
-    .value-item:nth-child(even) { border-right: none; }
-    .value-item:nth-last-child(-n+2) { border-bottom: none; }
-    .value-item::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, var(--red), transparent);
-      transform: scaleX(0);
-      transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
-    }
-    .value-item:hover { background: rgba(139,0,0,0.04); }
-    .value-item:hover::before { transform: scaleX(1); }
-    .value-num {
-      font-family: 'Cinzel', serif;
-      font-size: 0.5rem;
-      letter-spacing: 0.4em;
-      color: var(--red-hi);
-      display: block;
-      margin-bottom: 1.2rem;
-    }
-    .value-heading {
-      font-family: 'Cinzel', serif;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      color: var(--chrome);
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-    }
-    .value-text {
-      font-size: 0.95rem;
-      font-weight: 300;
-      font-style: italic;
-      line-height: 1.9;
-      color: var(--dim);
-    }
+#trailing-cursor-canvas{position:fixed;top:0;left:0;pointer-events:none;z-index:900;}
 
-    /* TIMELINE */
-    .story {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 0 2rem 6rem;
-      width: 100%;
-    }
-    .story-line {
-      display: flex;
-      gap: 2rem;
-      align-items: flex-start;
-      margin-bottom: 3.5rem;
-      position: relative;
-    }
-    .story-line::after {
-      content: '';
-      position: absolute;
-      left: 2.15rem;
-      top: 2.2rem;
-      bottom: -3.5rem;
-      width: 0.5px;
-      background: linear-gradient(to bottom, rgba(139,0,0,0.4), transparent);
-    }
-    .story-line:last-child::after { display: none; }
-    .story-dot {
-      flex-shrink: 0;
-      width: 4.3rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4rem;
-      padding-top: 0.15rem;
-    }
-    .story-dot-circle {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--red-hi);
-      box-shadow: 0 0 10px rgba(204,32,32,0.5);
-    }
-    .story-year {
-      font-family: 'Cinzel', serif;
-      font-size: 0.5rem;
-      letter-spacing: 0.2em;
-      color: var(--red-hi);
-    }
-    .story-label {
-      font-family: 'Cinzel', serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      color: var(--chrome);
-      text-transform: uppercase;
-      margin-bottom: 0.6rem;
-    }
-    .story-text {
-      font-size: 0.95rem;
-      font-weight: 300;
-      font-style: italic;
-      line-height: 1.9;
-      color: var(--dim);
-    }
+@media (max-width:768px){
+  #stage{inset:0;transform:none!important;will-change:auto;}
+  #title a span:first-child{display:none;}
+  #title a::before{content:'LVO';font-family:'Cinzel',serif;font-size:13px;letter-spacing:.3em;color:var(--white);}
+  #stage canvas{opacity:0.95;}
+}
 
-    /* CLOSING */
-    .closing {
-      padding: 4rem 2rem 7rem;
-      text-align: center;
-      max-width: 700px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    .closing-quote {
-      font-size: clamp(1.15rem, 4vw, 2rem);
-      font-weight: 300;
-      font-style: italic;
-      line-height: 1.85;
-      color: var(--white);
-      opacity: 0.85;
-      letter-spacing: 0.04em;
-    }
-    .closing-quote em { color: var(--chrome); font-style: normal; }
-    .closing-attr {
-      margin-top: 2.5rem;
-      font-family: 'Cinzel', serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.4em;
-      color: var(--red-hi);
-    }
+#video-bg{
+  position:fixed;inset:0;z-index:5;
+  width:100%;height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 0.9s ease;
+  pointer-events:none;
+}
+#video-bg.visible{ opacity:1; }
+#stage{ z-index:10; background:#000; }
 
-    /* FOOTER */
-    footer {
-      border-top: 0.5px solid rgba(139,0,0,0.2);
-      padding: 2.5rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-    }
-    .footer-mark {
-      font-family: 'Cinzel', serif;
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      color: var(--dim);
-    }
-    .footer-center {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-    .footer-privacy {
-      font-family: 'Cinzel', serif;
-      font-size: 0.5rem;
-      letter-spacing: 0.2em;
-      color: rgba(136,136,128,0.5);
-      text-decoration: none;
-      text-transform: uppercase;
-      border-bottom: 0.5px solid rgba(139,0,0,0.25);
-      padding-bottom: 0.15rem;
-      transition: color 0.3s, border-color 0.3s;
-    }
-    .footer-privacy:hover { color: var(--red-hi); border-color: var(--red-hi); }
-    .footer-copy {
-      font-family: 'Cinzel', serif;
-      font-size: 0.5rem;
-      letter-spacing: 0.15em;
-      color: rgba(136,136,128,0.4);
-    }
+/* Symbol slide overlay — LVO wordmark, matches the main site's About text */
+#about-hero{
+  position:fixed;
+  bottom:clamp(80px,12vh,130px);
+  left:clamp(40px,7vw,120px);
+  z-index:30;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.6s ease;
+}
+#about-hero.visible{ opacity:1; }
+@media(min-width:769px){
+  #about-hero{ bottom:auto; top:50%; transform:translateY(-50%); }
+  #about-hero.visible{ transform:translateY(-50%); }
+}
+@media(max-width:768px){
+  #about-hero{
+    left:0 !important; right:0 !important; width:100%;
+    bottom:auto; top:62%; transform:translateY(-50%);
+    text-align:center; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+  }
+  #about-hero.visible{ transform:translateY(-50%); }
+  #about-hero .about-lvo{ font-size:clamp(48px,12vw,72px); }
+}
+#about-hero .about-lvo{
+  display:block;
+  font-family:'Cinzel',serif;
+  font-weight:900;
+  font-size:clamp(32px,4.5vw,64px);
+  letter-spacing:.18em;
+  color:#fff;
+  line-height:1;
+  margin-bottom:1rem;
+  text-shadow:0 2px 40px rgba(0,0,0,0.9);
+}
+#about-hero .about-sub{
+  font-family:'Cinzel',serif;
+  font-size:clamp(8px,1vw,11px);
+  font-weight:600;
+  letter-spacing:.45em;
+  color:rgba(255,255,255,0.75);
+  text-transform:uppercase;
+}
 
-    /* SCRAMBLE CHARS */
-    .scramble-word {
-      display: inline-block;
-      white-space: nowrap;
-    }
-    .scramble-char {
-      display: inline-block;
-      will-change: contents;
-    }
+/* Numbered slide content — full text pulled from each section */
+#slide-content{
+  position:fixed;inset:0;z-index:30;
+  display:flex;align-items:center;justify-content:center;
+  padding:6.5rem 1.6rem 3rem;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.6s ease;
+}
+#slide-content.visible{ opacity:1; pointer-events:auto; }
+.slide-inner{
+  max-width:760px;width:100%;max-height:100%;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;
+  text-align:center;padding:0.5rem 0.25rem 1.5rem;
+}
+.slide-inner::-webkit-scrollbar{ width:4px; }
+.slide-inner::-webkit-scrollbar-thumb{ background:rgba(139,0,0,0.35); }
 
-    /* SWIPE-RIGHT NAVIGATION OVERLAY (About -> Contact) */
-    #swipe-transition-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 10000;
-      background: #000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.65s cubic-bezier(0.16,1,0.3,1);
-    }
-    #swipe-transition-overlay.active { opacity: 1; }
+.slide-eyebrow{
+  font-family:'Cinzel',serif;
+  font-size:clamp(8px,1.4vw,11px);
+  letter-spacing:.4em;
+  color:var(--red-hi);
+  text-transform:uppercase;
+  margin-bottom:1.1rem;
+}
+.slide-lvo{
+  font-family:'Cinzel',serif;font-weight:900;
+  font-size:clamp(2.1rem,7.5vw,4.2rem);
+  letter-spacing:.2em;color:#fff;line-height:1;
+  margin-bottom:.5rem;
+}
+.slide-subtitle{
+  font-family:'Cinzel',serif;
+  font-size:clamp(8px,1.6vw,12px);
+  letter-spacing:.35em;color:var(--dim);
+  text-transform:uppercase;margin-bottom:2rem;
+}
+.slide-heading-stack{
+  font-family:'IM Fell English',Georgia,serif;font-style:italic;
+  font-size:clamp(32px,6.5vw,72px);color:#fff;
+  line-height:1.08;letter-spacing:.03em;margin-bottom:1.8rem;
+  text-shadow:0 2px 40px rgba(0,0,0,0.9);
+}
+.slide-heading-stack span{ display:block; }
+.slide-body-text{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-weight:300;font-style:italic;
+  font-size:clamp(0.95rem,2vw,1.12rem);line-height:1.9;
+  color:rgba(240,238,236,0.8);max-width:620px;margin:0 auto;
+}
 
-    /* SECRET CROSS-PAGE WATER TRANSITION (Home <-> About) */
-    #transition-stage {
-      position: fixed;
-      inset: -3%;
-      z-index: 10001;
-      display: none;
-      pointer-events: none;
-    }
-    #transition-canvas {
-      width: 100% !important;
-      height: 100% !important;
-      display: block;
-    }
+.slide-list{ display:flex;flex-direction:column;gap:1.8rem;text-align:left;margin-top:0.5rem; }
+.slide-list-item{ border-top:0.5px solid rgba(139,0,0,0.25);padding-top:1.1rem; }
+.slide-list-num{
+  font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.35em;
+  color:var(--red-hi);display:block;margin-bottom:.5rem;
+}
+.slide-list-title{
+  font-family:'Cinzel',serif;font-size:.82rem;font-weight:600;
+  letter-spacing:.15em;color:var(--chrome);text-transform:uppercase;
+  margin-bottom:.5rem;
+}
+.slide-list-text{
+  font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-style:italic;
+  font-size:.92rem;line-height:1.8;color:rgba(240,238,236,0.72);
+}
 
-    /* ANIMATIONS */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(28px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    @media (max-width: 600px) {
-      nav { padding: 1.2rem 1.2rem; }
-      .hero { padding: 6rem 1.2rem 3rem; }
-      .hero-logo { width: clamp(150px, 60vw, 240px); margin-bottom: 2rem; }
-      .section-divider { padding: 0 1.2rem; margin: 3.5rem auto; }
-      .values { grid-template-columns: 1fr; padding: 0 1.2rem 5rem; }
-      .value-item { border-right: none; border-bottom: 0.5px solid rgba(139,0,0,0.15); }
-      .value-item:last-child { border-bottom: none; }
-      .who, .story, .closing { padding-left: 1.2rem; padding-right: 1.2rem; }
-      footer { flex-direction: column; align-items: center; text-align: center; padding: 2rem 1.2rem; }
-      .footer-center { flex-direction: column; gap: 0.6rem; }
-    }
-    @media (min-width: 601px) and (max-width: 900px) {
-      nav { padding: 1.5rem 2rem; }
-    }
-  </style>
+.slide-quote{
+  font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-style:italic;
+  font-size:clamp(1.15rem,3.8vw,1.9rem);line-height:1.8;
+  color:#fff;opacity:.9;margin-bottom:1.8rem;
+}
+.slide-quote-attr{
+  font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.4em;color:var(--red-hi);
+}
+</style>
 </head>
 <body>
-  <div class="video-bg">
-    <video autoplay muted loop playsinline>
-      <source src="assets/0415.mp4" type="video/mp4"/>
-    </video>
+
+<div id="site-wrap">
+
+  <div id="stage"><canvas></canvas></div>
+  <video id="video-bg" src="https://assets.wearelvo.com/LVO.mp4" loop muted playsinline preload="auto"></video>
+
+  <div id="title">
+    <a href="https://wearelvo.com/" id="title-link">
+      <span style="letter-spacing:0.3em;">Legion V. Omni-Operations</span>
+      <span id="title-indicator"></span>
+    </a>
   </div>
 
-  <div id="swipe-transition-overlay"></div>
-
-  <!-- Secret water-ripple transition layer, shared visual language with wearelvo.com -->
-  <div id="transition-stage"><canvas id="transition-canvas"></canvas></div>
-
-  <div class="page">
-    <nav>
-      <a class="nav-mark" href="https://wearelvo.com">LVO</a>
-      <span class="nav-context">About Us</span>
-    </nav>
-
-    <section class="hero">
-      <img class="hero-logo" src="assets/logo.png" alt="LVO Holdings"/>
-      <p class="hero-eyebrow">Est. 2026 · Texas, United States</p>
-      <h1 class="hero-title">LVO</h1>
-      <p class="hero-subtitle">Legion V &nbsp;·&nbsp; Omni-Operations</p>
-      <div class="hero-rule"></div>
-    </section>
-
-    <div class="section-divider reveal"><span data-scramble>Who We Are</span></div>
-
-    <section class="who">
-      <p class="who-body reveal" data-scramble-block>
-        LVO Holdings is a <em>private holding company</em> rooted in the United States —
-        built to own, operate, and steward assets across real estate, social infrastructure,
-        and strategic capital ventures. We are not a firm that chases trends.
-        We are a structure designed for <em>permanence</em>.
-      </p>
-    </section>
-
-    <div class="section-divider reveal"><span data-scramble>What We Stand For</span></div>
-
-    <section class="values">
-      <div class="value-item reveal">
-        <span class="value-num">I</span>
-        <p class="value-heading" data-scramble>Legacy Over Liquidity</p>
-        <p class="value-text" data-scramble-block>We measure success in decades, not quarters. Every decision is made with the next generation in mind — not the next exit.</p>
-      </div>
-      <div class="value-item reveal" style="transition-delay:0.1s">
-        <span class="value-num">II</span>
-        <p class="value-heading" data-scramble>Discretion By Design</p>
-        <p class="value-text" data-scramble-block>We do not court attention. The work speaks through results — quietly, consistently, without announcement.</p>
-      </div>
-      <div class="value-item reveal" style="transition-delay:0.2s">
-        <span class="value-num">III</span>
-        <p class="value-heading" data-scramble>Capital With Purpose</p>
-        <p class="value-text" data-scramble-block>Through LVO Operations, we deploy resources into social services and community infrastructure. We believe ownership carries obligation.</p>
-      </div>
-      <div class="value-item reveal" style="transition-delay:0.3s">
-        <span class="value-num">IV</span>
-        <p class="value-heading" data-scramble>Access Is Earned</p>
-        <p class="value-text" data-scramble-block>Our Alliance arm moves on trust and track record — not pitch decks. Partnerships are built on shared values before shared returns.</p>
-      </div>
-    </section>
-
-    <div class="section-divider reveal"><span data-scramble>Our Foundation</span></div>
-
-    <section class="story">
-      <div class="story-line reveal">
-        <div class="story-dot">
-          <div class="story-dot-circle"></div>
-          <span class="story-year">2026</span>
-        </div>
-        <div class="story-content">
-          <p class="story-label" data-scramble>Founded</p>
-          <p class="story-text" data-scramble-block>LVO Holdings was established in Houston under a family trust — structured from the outset as a permanent, multigenerational holding entity rather than a fund or venture vehicle.</p>
-        </div>
-      </div>
-      <div class="story-line reveal" style="transition-delay:0.15s">
-        <div class="story-dot">
-          <div class="story-dot-circle"></div>
-          <span class="story-year">Vindex</span>
-        </div>
-        <div class="story-content">
-          <p class="story-label" data-scramble>Real Estate</p>
-          <p class="story-text" data-scramble-block>The first pillar — Vindex — was activated to acquire and develop properties positioned for generational appreciation. Protection of tangible assets is the bedrock of the structure.</p>
-        </div>
-      </div>
-      <div class="story-line reveal" style="transition-delay:0.3s">
-        <div class="story-dot">
-          <div class="story-dot-circle"></div>
-          <span class="story-year">Ops</span>
-        </div>
-        <div class="story-content">
-          <p class="story-label" data-scramble>Operations</p>
-          <p class="story-text" data-scramble-block>LVO Operations channels capital into social services and community infrastructure — because durable wealth requires durable communities. Where purpose is not the byproduct of profit, but its precondition.</p>
-        </div>
-      </div>
-      <div class="story-line reveal" style="transition-delay:0.45s">
-        <div class="story-dot">
-          <div class="story-dot-circle"></div>
-          <span class="story-year">Alliance</span>
-        </div>
-        <div class="story-content">
-          <p class="story-label" data-scramble>Strategic Ventures</p>
-          <p class="story-text" data-scramble-block>LVO Alliance exists for the rare relationship — partnerships forged on aligned conviction. Capital deployed here moves slowly, intentionally, and only with full confidence in the people behind it.</p>
-        </div>
-      </div>
-    </section>
-
-    <div class="section-divider reveal"><span data-scramble>Our Ethos</span></div>
-
-    <section class="closing">
-      <p class="closing-quote reveal" data-scramble-block>
-        We were not built to be known.<br/>
-        We were built to <em>endure</em>.<br/>
-        The legacy is the work.
-      </p>
-      <p class="closing-attr reveal" style="transition-delay:0.2s" data-scramble>LVO Holdings · U.S. · Est. 2026</p>
-    </section>
-
-    <footer>
-      <span class="footer-mark">LVO Holdings</span>
-      <div class="footer-center">
-        <a class="footer-privacy" href="https://privacy.wearelvo.com">Privacy Policy</a>
-        <a class="footer-privacy" href="https://tos.wearelvo.com">Terms of Service</a>
-        <span class="footer-copy">&copy; 2026 A Family Trust · All Rights Reserved</span>
-      </div>
-    </footer>
+  <div id="about-hero">
+    <span class="about-lvo">LVO</span>
+    <span class="about-sub">About Us</span>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script>
-    /* ── SCRAMBLE CONFIG — edit these three values ── */
-    const SCRAMBLE_RADIUS   = 20;   // ← cursor radius in px — increase for wider effect, decrease to tighten
-    const SCRAMBLE_DURATION = 200;   // ← how long each char scrambles in ms
-    const SCRAMBLE_CHARS    = 'LVOᛪ༙';
+  <div id="slide-content"><div class="slide-inner"></div></div>
 
-    /* ── Intersection reveal ── */
-    const reveals = document.querySelectorAll('.reveal');
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-      });
-    }, { threshold: 0.12 });
-    reveals.forEach(r => obs.observe(r));
+  <!--
+    Slide order reads 4 · 3 · 2 · 1 · symbol, left to right. To add a real
+    photo to any of the four numbered slides, fill in that entry's img /
+    mobile_img in the SLIDES array below — same pattern as wearelvo.com's
+    index.html. Add another slide by inserting a new <li data-idx="N">
+    here, a matching SLIDES entry, and a controller dot.
+  -->
+  <div id="stage-nav">
+    <ul id="screen-page-nav">
+      <li data-idx="0"></li>
+      <li data-idx="1"></li>
+      <li data-idx="2"></li>
+      <li data-idx="3"></li>
+      <li class="about-slide" data-idx="4"></li>
+    </ul>
+  </div>
 
-    /*
-      ── Split text nodes into scramble-char spans ──
-      FIX: characters are now grouped into a per-word wrapper
-      (.scramble-word, white-space:nowrap) so the browser can only
-      break lines between words, never in the middle of one.
-      Previously every character was its own inline-block span with
-      nothing tying them together, so the line-wrap algorithm treated
-      each letter as an independent break opportunity — that's what
-      caused words like "with" to split into "wit" / "h" across lines.
-    */
-    function buildWordSpan(word) {
-      const wordSpan = document.createElement('span');
-      wordSpan.className = 'scramble-word';
-      for (const ch of word) {
-        const charSpan = document.createElement('span');
-        charSpan.className = 'scramble-char';
-        charSpan.dataset.orig = ch;
-        charSpan.textContent = ch;
-        wordSpan.appendChild(charSpan);
+  <div id="screen-controller">
+    <div class="inner">
+      <div id="knob"><span class="separator"></span></div>
+      <ul class="nav-group" id="controller-parent">
+        <li class="nav-list controller-item" data-idx="0"><span class="numerator">4</span></li>
+        <li class="nav-list controller-item" data-idx="1"><span class="numerator">3</span></li>
+        <li class="nav-list controller-item" data-idx="2"><span class="numerator">2</span></li>
+        <li class="nav-list controller-item" data-idx="3"><span class="numerator">1</span></li>
+        <li class="nav-list controller-item is-symbol is-current" data-idx="4"><span class="numerator">♱ᛪ༙</span></li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const isMobileDevice = window.innerWidth <= 768;
+const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+
+let WATER_INTENSITY = 0.028;
+if (isMobileDevice) {
+  WATER_INTENSITY = 0.015;
+} else if (isTablet) {
+  WATER_INTENSITY = 0.022;
+}
+
+const ASSETS = 'https://assets.wearelvo.com/';
+function getImageUrl(desktopImg, mobileImg){ return isMobileDevice ? mobileImg : desktopImg; }
+
+// Reversed order: numbered content slides first, symbol (the secret-transition
+// landing photo) last. Fill in img/mobile_img on the numbered slides once you
+// have photos for them — until then they render on the plain water backdrop.
+const SLIDES = [
+  {
+    num:'4', img:'', mobile_img:'',
+    type:'values',
+    heading:['WHAT','WE','STAND FOR'],
+    items:[
+      { num:'I',   title:'Legacy Over Liquidity', text:'We measure success in decades, not quarters. Every decision is made with the next generation in mind — not the next exit.' },
+      { num:'II',  title:'Discretion By Design',  text:'We do not court attention. The work speaks through results — quietly, consistently, without announcement.' },
+      { num:'III', title:'Capital With Purpose',  text:'Through LVO Operations, we deploy resources into social services and community infrastructure. We believe ownership carries obligation.' },
+      { num:'IV',  title:'Access Is Earned',      text:'Our Alliance arm moves on trust and track record — not pitch decks. Partnerships are built on shared values before shared returns.' }
+    ]
+  },
+  {
+    num:'3', img:'', mobile_img:'',
+    type:'timeline',
+    heading:['OUR','FOUNDATION'],
+    items:[
+      { year:'2026',    title:'Founded',            text:'LVO Holdings was established in Houston under a family trust — structured from the outset as a permanent, multigenerational holding entity rather than a fund or venture vehicle.' },
+      { year:'Vindex',  title:'Real Estate',         text:'The first pillar — Vindex — was activated to acquire and develop properties positioned for generational appreciation. Protection of tangible assets is the bedrock of the structure.' },
+      { year:'Ops',     title:'Operations',          text:'LVO Operations channels capital into social services and community infrastructure — because durable wealth requires durable communities. Where purpose is not the byproduct of profit, but its precondition.' },
+      { year:'Alliance',title:'Strategic Ventures',  text:'LVO Alliance exists for the rare relationship — partnerships forged on aligned conviction. Capital deployed here moves slowly, intentionally, and only with full confidence in the people behind it.' }
+    ]
+  },
+  {
+    num:'2', img:'', mobile_img:'',
+    type:'quote',
+    heading:['OUR','ETHOS'],
+    quote:'We were not built to be known.\nWe were built to endure.\nThe legacy is the work.',
+    attribution:'LVO Holdings · U.S. · Est. 2026'
+  },
+  {
+    num:'1', img:'', mobile_img:'',
+    type:'hero',
+    eyebrow:'Est. 2026 · Texas, United States',
+    title:'LVO',
+    subtitle:'Legion V · Omni-Operations',
+    heading:['WHO','WE ARE'],
+    text:'LVO Holdings is a private holding company rooted in the United States — built to own, operate, and steward assets across real estate, social infrastructure, and strategic capital ventures. We are not a firm that chases trends. We are a structure designed for permanence.'
+  },
+  {
+    num:'symbol', img: ASSETS+'LVOAL.jpg', mobile_img: ASSETS+'LVOAP.jpg',
+    type:'symbol'
+  },
+];
+const TOTAL = SLIDES.length;
+const SYMBOL_IDX = TOTAL - 1;
+
+// Mirrors wearelvo.com's secret transition — swiping/clicking forward past
+// the symbol slide blends into the main site's About photo, then hands off.
+const HOME_SLIDE = { img: ASSETS+'LVO%20R.jpg', mobile_img: ASSETS+'LVO%20Mobile%20R.jpg' };
+const HOME_URL = 'https://wearelvo.com/';
+
+const VIDEO_SLIDES = new Set([]);
+const videoBg  = document.getElementById('video-bg');
+const stageCanvas = document.querySelector('#stage');
+function updateVideoBackground(idx){
+  if(VIDEO_SLIDES.has(idx)){
+    videoBg.classList.add('visible');
+    stageCanvas.classList.add('video-mode');
+  } else {
+    videoBg.classList.remove('visible');
+    stageCanvas.classList.remove('video-mode');
+  }
+}
+updateVideoBackground(SYMBOL_IDX);
+
+const canvas = document.querySelector('#stage canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:false, alpha:false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const scene  = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+const geo    = new THREE.PlaneGeometry(2,2);
+
+const vertSrc = `
+varying vec2 vUv;
+void main(){ vUv=uv; gl_Position=vec4(position,1.0); }
+`;
+
+const fragSrc = `
+precision highp float;
+uniform float uTime;
+uniform float uBlend;
+uniform sampler2D uTexA;
+uniform sampler2D uTexB;
+uniform int uHasTexA;
+uniform int uHasTexB;
+uniform float uWaterIntensity;
+varying vec2 vUv;
+
+float wave(vec2 p, float freq, float phase){
+  return sin(p.x * freq + uTime * 0.3 + phase)
+       * cos(p.y * freq * 0.8 + uTime * 0.2 + phase * 1.3);
+}
+
+void main(){
+  vec2 uv = vUv;
+
+  float w1 = wave(uv, 2.8,  0.0);
+  float w2 = wave(uv, 4.9,  2.1);
+  float w3 = wave(uv * 1.3, 1.9, 4.3);
+  float w4 = wave(uv * 0.6, 6.2, 1.7);
+
+  vec2 disp;
+  disp.x = (w1*0.5 + w2*0.3 + w3*0.15 + w4*0.05) * uWaterIntensity;
+  disp.y = (w2*0.5 + w1*0.25 + w4*0.2  + w3*0.05) * uWaterIntensity;
+  vec2 wuv = clamp(uv + disp, 0.0, 1.0);
+
+  vec3 colA, colB;
+  if(uHasTexA == 1){ colA = texture2D(uTexA, wuv).rgb * 0.82; } else { colA = vec3(0.04, 0.02, 0.12); }
+  if(uHasTexB == 1){ colB = texture2D(uTexB, wuv).rgb * 0.82; } else { colB = vec3(0.04, 0.02, 0.12); }
+
+  float spec = max(0.0, w1 * 0.3 + w2 * 0.2 + 0.2);
+  vec3 sheen = vec3(0.55, 0.52, 0.72) * pow(spec, 6.0) * 0.18;
+
+  vec3 col = mix(colB, colA, clamp(uBlend, 0.0, 1.0));
+  col += sheen;
+
+  vec2 vig = uv * 2.0 - 1.0;
+  col *= 1.0 - dot(vig, vig) * 0.38;
+
+  float grain = fract(sin(dot(uv * 997.0, vec2(12.9898, 78.233))) * 43758.5453);
+  col += grain * 0.018 - 0.009;
+
+  gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+}
+`;
+
+function makePlaceholder(){
+  const d=new Uint8Array([30,30,40,255]);
+  const t=new THREE.DataTexture(d,1,1,THREE.RGBAFormat);
+  t.needsUpdate=true; return t;
+}
+
+const placeholder = makePlaceholder();
+const textures = new Array(TOTAL).fill(null);
+const loader = new THREE.TextureLoader();
+loader.crossOrigin = 'anonymous';
+
+// Land directly on the symbol slide — that's the photo the main site's
+// secret transition already blended into, so there's no visible seam.
+let current = SYMBOL_IDX, transitioning=false, transitionStart=0;
+const TRANS_DUR=900;
+
+SLIDES.forEach((s,i)=>{
+  const imgUrl = getImageUrl(s.img, s.mobile_img);
+  if(!imgUrl) return;
+  loader.load(imgUrl, tex=>{
+    tex.wrapS=tex.wrapT=THREE.ClampToEdgeWrapping;
+    tex.minFilter=THREE.LinearFilter;
+    textures[i]=tex;
+    if(i===current){
+      uniforms.uTexA.value=tex;
+      uniforms.uHasTexA.value=1;
+    }
+  });
+});
+
+let homeTexture = null;
+loader.load(getImageUrl(HOME_SLIDE.img, HOME_SLIDE.mobile_img), tex=>{
+  tex.wrapS=tex.wrapT=THREE.ClampToEdgeWrapping;
+  tex.minFilter=THREE.LinearFilter;
+  homeTexture = tex;
+});
+
+const uniforms = {
+  uTime:           {value:0},
+  uBlend:          {value:1},
+  uTexA:           {value:placeholder},
+  uTexB:           {value:placeholder},
+  uHasTexA:        {value:0},
+  uHasTexB:        {value:0},
+  uWaterIntensity: {value:WATER_INTENSITY},
+};
+
+scene.add(new THREE.Mesh(geo, new THREE.ShaderMaterial({vertexShader:vertSrc,fragmentShader:fragSrc,uniforms})));
+
+function resize(){ renderer.setSize(window.innerWidth, window.innerHeight); }
+resize();
+window.addEventListener('resize', resize);
+
+const navUl=document.getElementById('screen-page-nav');
+const ctrlUl=document.getElementById('controller-parent');
+const knob=document.getElementById('knob');
+
+function layoutNav(){
+  const isMobile = window.innerWidth <= 768;
+  const sw = isMobile ? window.innerWidth : window.innerWidth * 0.5;
+  navUl.dataset.sw = sw;
+  navUl.style.width=(sw*TOTAL)+'px';
+  Array.from(navUl.children).forEach(li=>{ li.style.width=sw+'px'; li.style.minHeight='80px'; });
+}
+layoutNav();
+window.addEventListener('resize', layoutNav);
+
+const aboutHero = document.getElementById('about-hero');
+const slideContent = document.getElementById('slide-content');
+const slideInner = slideContent.querySelector('.slide-inner');
+
+function headingStack(lines){
+  return '<div class="slide-heading-stack">' + lines.map(l=>'<span>'+l+'</span>').join('') + '</div>';
+}
+
+function renderSlideContent(idx){
+  const s = SLIDES[idx];
+  if(s.type === 'symbol'){
+    slideContent.classList.remove('visible');
+    slideInner.innerHTML = '';
+    aboutHero.classList.add('visible');
+    return;
+  }
+  aboutHero.classList.remove('visible');
+  let html = '';
+  if(s.type === 'hero'){
+    html += '<div class="slide-eyebrow">'+s.eyebrow+'</div>';
+    html += '<div class="slide-lvo">'+s.title+'</div>';
+    html += '<div class="slide-subtitle">'+s.subtitle+'</div>';
+    html += headingStack(s.heading);
+    html += '<p class="slide-body-text">'+s.text+'</p>';
+  } else if(s.type === 'quote'){
+    html += headingStack(s.heading);
+    html += '<p class="slide-quote">'+s.quote.split('\n').join('<br/>')+'</p>';
+    html += '<div class="slide-quote-attr">'+s.attribution+'</div>';
+  } else if(s.type === 'timeline' || s.type === 'values'){
+    html += headingStack(s.heading);
+    html += '<div class="slide-list">' + s.items.map(function(it){
+      const badge = s.type === 'timeline' ? it.year : it.num;
+      return '<div class="slide-list-item">'
+           +   '<span class="slide-list-num">'+badge+'</span>'
+           +   '<div class="slide-list-title">'+it.title+'</div>'
+           +   '<p class="slide-list-text">'+it.text+'</p>'
+           + '</div>';
+    }).join('') + '</div>';
+  }
+  slideInner.innerHTML = html;
+  slideInner.scrollTop = 0;
+  slideContent.classList.add('visible');
+}
+renderSlideContent(current);
+
+function updateNav(idx){
+  const sw = parseFloat(navUl.dataset.sw) || window.innerWidth * 0.5;
+  navUl.style.transform=`translateX(${-(sw*idx-(window.innerWidth/2-sw/2))}px)`;
+  Array.from(ctrlUl.children).forEach((li,i)=>li.classList.toggle('is-current',i===idx));
+  knob.style.transform=`translateX(${idx*(ctrlUl.offsetWidth/TOTAL)}px)`;
+}
+updateNav(current);
+
+function goTo(idx){
+  if(idx<0||idx>=TOTAL||transitioning||idx===current) return;
+  transitioning=true;
+  const prev=current; current=idx;
+  const tA=textures[idx], tB=textures[prev];
+  uniforms.uTexB.value=tB||placeholder; uniforms.uHasTexB.value=tB?1:0;
+  uniforms.uTexA.value=tA||placeholder; uniforms.uHasTexA.value=tA?1:0;
+  uniforms.uBlend.value=0;
+  transitionStart=performance.now();
+  updateNav(idx);
+  updateVideoBackground(idx);
+  renderSlideContent(idx);
+  setTimeout(()=>transitioning=false, TRANS_DUR+100);
+}
+
+// Moving forward past the symbol slide blends into the main site's About
+// photo, then hands off to wearelvo.com — same technique as the reverse
+// trip on the main site.
+function goToSecretHome(){
+  if(transitioning || current!==SYMBOL_IDX) return;
+  transitioning=true;
+  const tB=textures[SYMBOL_IDX];
+  uniforms.uTexB.value=tB||placeholder; uniforms.uHasTexB.value=tB?1:0;
+  uniforms.uTexA.value=homeTexture||placeholder; uniforms.uHasTexA.value=homeTexture?1:0;
+  uniforms.uBlend.value=0;
+  transitionStart=performance.now();
+  aboutHero.classList.remove('visible');
+  setTimeout(()=>{ window.location.href = HOME_URL; }, TRANS_DUR+80);
+}
+
+Array.from(ctrlUl.children).forEach(li=>li.addEventListener('click',()=>goTo(+li.dataset.idx)));
+
+window.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){ if(current===SYMBOL_IDX) goToSecretHome(); else goTo(current+1); }
+  if(e.key==='ArrowLeft' ||e.key==='ArrowUp')   goTo(current-1);
+});
+
+let wCool=false;
+window.addEventListener('wheel',e=>{
+  if(wCool)return; wCool=true;
+  if(e.deltaX>30||e.deltaY>30){ if(current===SYMBOL_IDX) goToSecretHome(); else goTo(current+1); }
+  else if(e.deltaX<-30||e.deltaY<-30) goTo(current-1);
+  setTimeout(()=>wCool=false,900);
+},{passive:true});
+
+let stageDragX=0, stageDragging=false, stageDelta=0;
+
+document.getElementById('stage').addEventListener('pointerdown',e=>{
+  stageDragging=true; stageDragX=e.clientX; stageDelta=0;
+  e.preventDefault();
+},{passive:false});
+
+window.addEventListener('touchstart', e=>{
+  stageDragging=true;
+  stageDragX=e.touches[0].clientX;
+  stageDelta=0;
+},{passive:true});
+
+window.addEventListener('touchmove', e=>{
+  if(stageDragging) stageDelta=e.touches[0].clientX - stageDragX;
+},{passive:true});
+
+window.addEventListener('touchend', ()=>{
+  if(!stageDragging) return;
+  stageDragging=false;
+  if(stageDelta < -50){ if(current===SYMBOL_IDX) goToSecretHome(); else goTo(current+1); }
+  else if(stageDelta > 50) goTo(current-1);
+  stageDelta=0;
+});
+
+window.addEventListener('pointermove',e=>{ if(stageDragging && e.pointerType!=='touch') stageDelta=e.clientX-stageDragX; });
+window.addEventListener('pointerup',()=>{
+  if(!stageDragging) return;
+  stageDragging=false;
+  if(stageDelta<-50){ if(current===SYMBOL_IDX) goToSecretHome(); else goTo(current+1); }
+  else if(stageDelta>50) goTo(current-1);
+  stageDelta=0;
+});
+
+const isTouchDevice = window.matchMedia('(pointer:coarse)').matches;
+
+if(!isTouchDevice){
+  const CURSOR_PARTICLE_SRC = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAATCAYAAACk9eypAAAAAXNSR0IArs4c6QAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAhGVYSWZNTQAqAAAACAAFARIAAwAAAAEAAQAAARoABQAAAAEAAABKARsABQAAAAEAAABSASgAAwAAAAEAAgAAh2kABAAAAAEAAABaAAAAAAAAAEgAAAABAAAASAAAAAEAA6ABAAMAAAABAAEAAKACAAQAAAABAAAADKADAAQAAAABAAAAEwAAAAAChpcNAAAACXBIWXMAAAsTAAALEwEAmpwYAAABWWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyI+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3JpZW50YXRpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgpMwidZAAABqElEQVQoFY3SPUvDQBgH8BREpRHExYiDgmLFl6WC+AYmWeyLg4i7buJX8DMpOujgyxGvUYeCgzhUQUSKKLUS0+ZyptXh8Z5Ti621ekPyJHl+uftfomhaf9Ei5JyxXKfynyEA6EYcLHpwyflT958GAQ7DTABNHd8EbtDbEH2BD5QEQmi2mM8P/Iq+A0SzszEg+3sPjDnDdVEtQKQbMUidHD3xVzf6A9UDEmEm+8h9KTqTVUjT+vB53aHrCbAPiceYq1dQI1Aqv4EhMll0jzv+Y0yiRgCnLRSYyDQHVoqUXe4uKL9l+L7GXC4vkMhE6eW/AOJs9k583ORDUyXMZ8F5SVHVVnllmPNKSFagAJ5DofaqGXw/gHBYg51dIldkmknY3tguv3jOtHR4+MqAzaraJXbEhqHhcQlwGSOi5pytVQHZLN5s0WNe8HPrLYlFsO20RPHkImxsbmHdLJFI76th7Z4SeuF53hTeFLvhRCJRCTKZKxgdnRDbW+iozFJbBMw14/ElwGYc0egMBMFzT21f5Rog33Z7dX02GBm7WV5ZfT5Nn5bE3zuCDe9UxdTpNvK+5AAAAABJRU5ErkJggg==';
+
+  const CURSOR_PARTICLE_COUNT = 15;
+  const CURSOR_RATE = 0.4;
+
+  const cursorImage = new Image();
+  cursorImage.src = CURSOR_PARTICLE_SRC;
+
+  const trailCanvas = document.createElement('canvas');
+  trailCanvas.id = 'trailing-cursor-canvas';
+  trailCanvas.width = window.innerWidth;
+  trailCanvas.height = window.innerHeight;
+  document.body.appendChild(trailCanvas);
+  const trailCtx = trailCanvas.getContext('2d');
+
+  window.addEventListener('resize', ()=>{
+    trailCanvas.width = window.innerWidth;
+    trailCanvas.height = window.innerHeight;
+  });
+
+  let cursorPos = { x: window.innerWidth/2, y: window.innerHeight/2 };
+  let cursorParticles = [];
+  let cursorParticlesInitted = false;
+
+  window.addEventListener('mousemove', e=>{
+    cursorPos.x = e.clientX;
+    cursorPos.y = e.clientY;
+    if(!cursorParticlesInitted){
+      cursorParticlesInitted = true;
+      for(let i=0;i<CURSOR_PARTICLE_COUNT;i++){
+        cursorParticles.push({ x: cursorPos.x, y: cursorPos.y });
       }
-      return wordSpan;
     }
+  });
 
-    function splitNode(textNode) {
-      const text = textNode.textContent;
-      const frag = document.createDocumentFragment();
-      // Split on runs of whitespace, keeping the whitespace itself intact
-      const parts = text.split(/(\s+)/);
-      parts.forEach(part => {
-        if (part === '') return;
-        if (/^\s+$/.test(part)) {
-          frag.appendChild(document.createTextNode(part));
-        } else {
-          frag.appendChild(buildWordSpan(part));
-        }
-      });
-      return frag;
-    }
-
-    function splitElement(el) {
-      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
-      const nodes = [];
-      let n;
-      while ((n = walker.nextNode())) nodes.push(n);
-      nodes.forEach(tn => {
-        if (tn.textContent.trim()) tn.parentNode.replaceChild(splitNode(tn), tn);
-      });
-    }
-
-    document.querySelectorAll('[data-scramble], [data-scramble-block]').forEach(el => {
-      splitElement(el);
+  (function trailLoop(){
+    requestAnimationFrame(trailLoop);
+    trailCtx.clearRect(0,0,trailCanvas.width,trailCanvas.height);
+    if(!cursorParticlesInitted || !cursorImage.complete) return;
+    let x = cursorPos.x, y = cursorPos.y;
+    cursorParticles.forEach((p, i)=>{
+      const next = cursorParticles[i+1] || cursorParticles[0];
+      p.x = x; p.y = y;
+      trailCtx.drawImage(cursorImage, p.x, p.y);
+      x += (next.x - p.x) * CURSOR_RATE;
+      y += (next.y - p.y) * CURSOR_RATE;
     });
+  })();
+}
 
-    /* ── Per-char scramble animation ── */
-    const activeTimers = new Map();
+(function animate(ts){
+  requestAnimationFrame(animate);
+  uniforms.uTime.value=ts*0.001;
+  if(uniforms.uBlend.value<1){
+    const t=Math.min((ts-transitionStart)/TRANS_DUR,1);
+    uniforms.uBlend.value=1-(1-t)*(1-t)*(1-t);
+  }
+  renderer.render(scene,camera);
+})();
 
-    function scrambleChar(span) {
-      const orig = span.dataset.orig;
-      if (!orig) return;
-      if (activeTimers.has(span)) clearInterval(activeTimers.get(span));
-      const start = performance.now();
-      const id = setInterval(() => {
-        const elapsed = performance.now() - start;
-        if (elapsed < SCRAMBLE_DURATION) {
-          span.textContent = SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
-        } else {
-          span.textContent = orig;
-          clearInterval(id);
-          activeTimers.delete(span);
-        }
-      }, 33);
-      activeTimers.set(span, id);
-    }
-
-    /* ── Pointer move — RAF throttled ── */
-    let raf = null;
-    document.addEventListener('pointermove', (e) => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = null;
-        document.querySelectorAll('.scramble-char').forEach(span => {
-          const rect = span.getBoundingClientRect();
-          const cx = rect.left + rect.width / 2;
-          const cy = rect.top + rect.height / 2;
-          const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
-          if (dist < SCRAMBLE_RADIUS) {
-            const proximity = 1 - dist / SCRAMBLE_RADIUS;
-            if (Math.random() < proximity * 0.35) scrambleChar(span);
-          }
-        });
-      });
-    });
-    /* ── Swipe-right navigation (About -> Contact) ──
-       Swiping (or dragging) rightward — horizontally, past a distance
-       threshold, and more horizontal than vertical so normal scrolling
-       is never hijacked — fades to black and then navigates to
-       SWIPE_TARGET_URL. Edit that one constant to point elsewhere. */
-    const SWIPE_TARGET_URL = 'https://contact.wearelvo.com/';
-    const SWIPE_DISTANCE_THRESHOLD = 100; // px of horizontal travel required
-    const swipeOverlay = document.getElementById('swipe-transition-overlay');
-    let swipeNavigated = false;
-
-    function navigateWithFade(url) {
-      if (swipeNavigated) return;
-      swipeNavigated = true;
-      swipeOverlay.classList.add('active');
-      setTimeout(() => { window.location.href = url; }, 650);
-    }
-
-    // Touch
-    let touchStartX = 0, touchStartY = 0, touchActive = false;
-    window.addEventListener('touchstart', (e) => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      touchActive = true;
-    }, { passive: true });
-
-    window.addEventListener('touchmove', (e) => {
-      if (!touchActive || swipeNavigated) return;
-      const dx = e.touches[0].clientX - touchStartX;
-      const dy = e.touches[0].clientY - touchStartY;
-      if (dx > SWIPE_DISTANCE_THRESHOLD && dx > Math.abs(dy) * 1.5) {
-        navigateWithFade(SWIPE_TARGET_URL);
-      }
-    }, { passive: true });
-
-    window.addEventListener('touchend', () => { touchActive = false; });
-
-    // Mouse / pen drag
-    let dragStartX = 0, dragStartY = 0, dragging = false;
-    window.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'touch') return;
-      dragStartX = e.clientX;
-      dragStartY = e.clientY;
-      dragging = true;
-    });
-    window.addEventListener('pointermove', (e) => {
-      if (!dragging || swipeNavigated || e.pointerType === 'touch') return;
-      const dx = e.clientX - dragStartX;
-      const dy = e.clientY - dragStartY;
-      if (dx > SWIPE_DISTANCE_THRESHOLD + 20 && dx > Math.abs(dy) * 1.5) {
-        navigateWithFade(SWIPE_TARGET_URL);
-      }
-    });
-    window.addEventListener('pointerup', () => { dragging = false; });
-
-    // Trackpad horizontal wheel swipe (natural-scrolling rightward swipe
-    // reports as negative deltaX in most browsers)
-    let wheelAccumX = 0, wheelCooldown = false;
-    window.addEventListener('wheel', (e) => {
-      if (swipeNavigated || wheelCooldown) return;
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-        wheelAccumX += e.deltaX;
-        if (wheelAccumX < -SWIPE_DISTANCE_THRESHOLD * 1.4) {
-          wheelCooldown = true;
-          navigateWithFade(SWIPE_TARGET_URL);
-        }
-      } else {
-        wheelAccumX = 0;
-      }
-    }, { passive: true });
-
-    /* ══════════════════════════════════════════════════════════════
-       SECRET CROSS-PAGE TRANSITION (Home <-> About)
-       Same water-ripple shader as wearelvo.com's slide engine. When
-       you arrive here via a swipe from the home page (?transition=home)
-       the ripple plays an entrance over a photo, then peels away to
-       reveal the page underneath. Swiping LEFT here does the reverse
-       and sends you back to wearelvo.com.
-
-       wearelvo.com and about.wearelvo.com are different subdomains,
-       so sessionStorage/localStorage can't hand data between them —
-       the query param is the handoff, and it's scrubbed from the
-       address bar immediately on load.
-       ══════════════════════════════════════════════════════════════ */
-    (function () {
-      const HOME_URL = 'https://wearelvo.com/';
-      // 👉 Put the photo you want to appear during the swipe here.
-      const TRANSITION_PHOTO = 'assets/about-photo.jpg';
-      const DUR = 900;
-
-      const params = new URLSearchParams(window.location.search);
-      const arrivingFromHome = params.get('transition') === 'home';
-      if (params.get('transition')) {
-        history.replaceState(null, '', window.location.pathname);
-      }
-
-      const stage = document.getElementById('transition-stage');
-      const canvas = document.getElementById('transition-canvas');
-      let three = null;
-
-      function getThree() {
-        if (three) return three;
-
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        window.addEventListener('resize', () => renderer.setSize(window.innerWidth, window.innerHeight));
-
-        const scene = new THREE.Scene();
-        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-        const geo = new THREE.PlaneGeometry(2, 2);
-
-        const vertSrc = `varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position,1.0); }`;
-        const fragSrc = `
-          precision highp float;
-          uniform float uTime; uniform float uBlend;
-          uniform sampler2D uTexA; uniform sampler2D uTexB;
-          uniform int uHasTexA; uniform int uHasTexB;
-          uniform float uWaterIntensity;
-          varying vec2 vUv;
-          float wave(vec2 p, float freq, float phase){
-            return sin(p.x*freq + uTime*0.3 + phase) * cos(p.y*freq*0.8 + uTime*0.2 + phase*1.3);
-          }
-          void main(){
-            vec2 uv = vUv;
-            float w1=wave(uv,2.8,0.0), w2=wave(uv,4.9,2.1), w3=wave(uv*1.3,1.9,4.3), w4=wave(uv*0.6,6.2,1.7);
-            vec2 disp;
-            disp.x=(w1*0.5+w2*0.3+w3*0.15+w4*0.05)*uWaterIntensity;
-            disp.y=(w2*0.5+w1*0.25+w4*0.2+w3*0.05)*uWaterIntensity;
-            vec2 wuv = clamp(uv+disp, 0.0, 1.0);
-            vec3 colA = uHasTexA==1 ? texture2D(uTexA,wuv).rgb*0.82 : vec3(0.04,0.02,0.12);
-            vec3 colB = uHasTexB==1 ? texture2D(uTexB,wuv).rgb*0.82 : vec3(0.04,0.02,0.12);
-            float spec = max(0.0, w1*0.3+w2*0.2+0.2);
-            vec3 sheen = vec3(0.55,0.52,0.72)*pow(spec,6.0)*0.18;
-            vec3 col = mix(colB, colA, clamp(uBlend,0.0,1.0)) + sheen;
-            vec2 vig = uv*2.0-1.0;
-            col *= 1.0 - dot(vig,vig)*0.38;
-            float grain = fract(sin(dot(uv*997.0, vec2(12.9898,78.233)))*43758.5453);
-            col += grain*0.018 - 0.009;
-            gl_FragColor = vec4(clamp(col,0.0,1.0), 1.0);
-          }`;
-
-        const uniforms = {
-          uTime: { value: 0 }, uBlend: { value: 1 },
-          uTexA: { value: null }, uTexB: { value: null },
-          uHasTexA: { value: 0 }, uHasTexB: { value: 0 },
-          uWaterIntensity: { value: window.innerWidth <= 768 ? 0.015 : 0.028 }
-        };
-        scene.add(new THREE.Mesh(geo, new THREE.ShaderMaterial({ vertexShader: vertSrc, fragmentShader: fragSrc, uniforms })));
-
-        (function loop(ts) {
-          requestAnimationFrame(loop);
-          uniforms.uTime.value = ts * 0.001;
-          renderer.render(scene, camera);
-        })(0);
-
-        const tex = new THREE.TextureLoader().load(TRANSITION_PHOTO, t => {
-          t.minFilter = THREE.LinearFilter;
-          t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping;
-        });
-
-        three = { uniforms, tex };
-        return three;
-      }
-
-      function animateBlend(uniforms, from, to, onDone) {
-        const start = performance.now();
-        (function step() {
-          const p = Math.min((performance.now() - start) / DUR, 1);
-          uniforms.uBlend.value = from + (to - from) * (1 - Math.pow(1 - p, 3));
-          if (p < 1) requestAnimationFrame(step); else if (onDone) onDone();
-        })();
-      }
-
-      function playEntrance() {
-        const t = getThree();
-        stage.style.transition = 'none';
-        stage.style.display = 'block';
-        stage.style.opacity = '1';
-        t.uniforms.uTexA.value = t.tex; t.uniforms.uHasTexA.value = 1;
-        t.uniforms.uHasTexB.value = 0;
-        t.uniforms.uBlend.value = 0;
-        animateBlend(t.uniforms, 0, 1, () => {
-          stage.style.transition = 'opacity 0.5s ease';
-          stage.style.opacity = '0';
-          setTimeout(() => { stage.style.display = 'none'; }, 520);
-        });
-      }
-
-      let exiting = false;
-      function playExitToHome() {
-        if (exiting) return;
-        exiting = true;
-        const t = getThree();
-        stage.style.transition = 'none';
-        stage.style.display = 'block';
-        stage.style.opacity = '1';
-        t.uniforms.uTexB.value = t.tex; t.uniforms.uHasTexB.value = 1;
-        t.uniforms.uHasTexA.value = 0;
-        t.uniforms.uBlend.value = 0;
-        animateBlend(t.uniforms, 0, 1, () => {
-          window.location.href = HOME_URL + '?transition=about';
-        });
-      }
-
-      if (arrivingFromHome) window.addEventListener('load', playEntrance);
-
-      /* Swipe LEFT (opposite of the swipe-right-to-contact above) returns home */
-      const LEFT_THRESHOLD = 100;
-
-      let tsx = 0, tsy = 0, tActive = false;
-      window.addEventListener('touchstart', e => { tsx = e.touches[0].clientX; tsy = e.touches[0].clientY; tActive = true; }, { passive: true });
-      window.addEventListener('touchmove', e => {
-        if (!tActive || exiting) return;
-        const dx = e.touches[0].clientX - tsx, dy = e.touches[0].clientY - tsy;
-        if (dx < -LEFT_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.5) playExitToHome();
-      }, { passive: true });
-      window.addEventListener('touchend', () => { tActive = false; });
-
-      let dsx = 0, dsy = 0, dActive = false;
-      window.addEventListener('pointerdown', e => {
-        if (e.pointerType === 'touch') return;
-        dsx = e.clientX; dsy = e.clientY; dActive = true;
-      });
-      window.addEventListener('pointermove', e => {
-        if (!dActive || exiting || e.pointerType === 'touch') return;
-        const dx = e.clientX - dsx, dy = e.clientY - dsy;
-        if (dx < -(LEFT_THRESHOLD + 20) && Math.abs(dx) > Math.abs(dy) * 1.5) playExitToHome();
-      });
-      window.addEventListener('pointerup', () => { dActive = false; });
-
-      let wAccumLeft = 0;
-      window.addEventListener('wheel', e => {
-        if (exiting) return;
-        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-          wAccumLeft += e.deltaX;
-          if (wAccumLeft > LEFT_THRESHOLD * 1.4) playExitToHome();
-        } else {
-          wAccumLeft = 0;
-        }
-      }, { passive: true });
-    })();
-  </script>
+const stageEl = document.getElementById('stage');
+let mouseX=0, mouseY=0, tiltX=0, tiltY=0;
+if(!isTouchDevice){
+  window.addEventListener('mousemove', e=>{
+    mouseX=(e.clientX/window.innerWidth-0.5)*2;
+    mouseY=(e.clientY/window.innerHeight-0.5)*2;
+  });
+  window.addEventListener('mouseleave',()=>{ mouseX=0; mouseY=0; });
+  (function tiltLoop(){
+    requestAnimationFrame(tiltLoop);
+    tiltX+=(mouseX-tiltX)*0.05; tiltY+=(mouseY-tiltY)*0.05;
+    const rx=tiltY*4, ry=-tiltX*4, tx=tiltX*10, ty=tiltY*6;
+    stageEl.style.transform=`perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg) translate(${tx}px,${ty}px)`;
+  })();
+}
+</script>
 </body>
 </html>
