@@ -39,6 +39,14 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Ti
 #title-indicator{display:inline-block;width:40px;height:1px;background:var(--white);margin-left:12px;transform-origin:left center;transform:scaleX(0.75);transition:transform 0.4s;}
 #title a:hover #title-indicator{transform:scaleX(1);}
 
+#return-link{position:fixed;top:0;right:0;z-index:35;padding:clamp(14px,3vw,28px) clamp(16px,4vw,40px);}
+#return-link a{text-decoration:none;color:var(--white);font-size:clamp(9px,2vw,13px);letter-spacing:0.3em;text-transform:uppercase;display:inline-flex;align-items:center;gap:12px;position:relative;}
+#return-rune{display:inline-block;font-size:1.35em;line-height:1;color:var(--white);transform-origin:center;transition:transform 0.4s;}
+#return-link a:hover #return-rune{transform:translateX(4px);}
+@media(max-width:768px){
+  #return-link-label{display:none;}
+}
+
 #stage-nav{position:fixed;top:50%;left:0;right:0;z-index:20;transform:translateY(-50%);overflow:hidden;pointer-events:none;}
 #screen-page-nav{display:flex;list-style:none;transition:transform 0.8s cubic-bezier(0.77,0,0.175,1);will-change:transform;}
 #screen-page-nav li{flex-shrink:0;display:flex;align-items:center;justify-content:center;pointer-events:all;}
@@ -214,6 +222,13 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Ti
     <a href="https://wearelvo.com/" id="title-link">
       <span style="letter-spacing:0.3em;">Legion V. Omni-Operations</span>
       <span id="title-indicator"></span>
+    </a>
+  </div>
+
+  <div id="return-link">
+    <a href="https://wearelvo.com/" id="return-link-a">
+      <span id="return-link-label">Return</span>
+      <span id="return-rune">᛭</span>
     </a>
   </div>
 
@@ -561,16 +576,22 @@ function goTo(idx){
 // photo, then hands off to wearelvo.com — same technique as the reverse
 // trip on the main site.
 function goToSecretHome(){
-  if(transitioning || current!==SYMBOL_IDX) return;
+  if(transitioning) return;
   transitioning=true;
-  const tB=textures[SYMBOL_IDX];
+  const tB=textures[current];
   uniforms.uTexB.value=tB||placeholder; uniforms.uHasTexB.value=tB?1:0;
   uniforms.uTexA.value=homeTexture||placeholder; uniforms.uHasTexA.value=homeTexture?1:0;
   uniforms.uBlend.value=0;
   transitionStart=performance.now();
   aboutHero.classList.remove('visible');
+  slideContent.classList.remove('visible');
   setTimeout(()=>{ window.location.href = HOME_URL; }, TRANS_DUR+80);
 }
+
+document.getElementById('return-link-a').addEventListener('click', e=>{
+  e.preventDefault();
+  goToSecretHome();
+});
 
 Array.from(ctrlUl.children).forEach(li=>li.addEventListener('click',()=>goTo(+li.dataset.idx)));
 
