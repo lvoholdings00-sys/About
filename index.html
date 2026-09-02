@@ -11,11 +11,6 @@
   var consent = getCookie('lvo_motion_consent');
   window.__LVO_MOTION_CONSENT__ = consent;
 
-  // This page always sends visitors through the warning page first — it
-  // does not use the saved cookie to skip that gate. The cookie is only
-  // consulted below to decide whether images load once they're back here.
-  // "warned=1" is a one-time marker set only on the redirect back from
-  // warning.wearelvo.com, so that specific return trip isn't bounced again.
   var justWarned = new URLSearchParams(location.search).get('warned') === '1';
   if(!justWarned){
     location.replace('https://warning.wearelvo.com/?return=' + encodeURIComponent(location.origin + location.pathname));
@@ -47,9 +42,6 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Ti
 .ls-bar-fill{position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--purple),transparent);animation:lsBar 1.4s ease-in-out infinite;}
 @keyframes lsBar{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
 
-/* Loading screen stays up for a minimum of 2s and until the landing
-   slide's photo has actually finished loading, so there's never a flash
-   of the shader's raw placeholder color underneath. */
 #site-wrap{opacity:0;transition:opacity 0.8s ease;}
 #site-wrap.visible{opacity:1;}
 
@@ -83,7 +75,10 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Ti
 #legal-links{position:fixed;bottom:clamp(12px,3vw,20px);right:clamp(16px,4vw,40px);z-index:35;display:flex;gap:1.2rem;pointer-events:all;}
 #legal-links a{font-family:'Cinzel',serif;font-size:clamp(7px,1vw,9px);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;border-bottom:0.5px solid rgba(139,0,0,0.3);padding-bottom:2px;transition:color .3s,border-color .3s;}
 #legal-links a:hover{color:var(--white);border-color:var(--red-hi);}
-@media(max-width:600px){#legal-links{right:clamp(10px,3vw,20px);gap:0.8rem;}}
+@media(max-width:768px){
+  #legal-links{left:50%;right:auto;transform:translateX(-50%);bottom:64px;gap:1rem;}
+}
+@media(max-width:600px){#legal-links{gap:0.7rem;}#legal-links a{font-size:7px;}}
 #screen-controller .inner{position:relative;display:flex;align-items:flex-end;}
 #knob{position:absolute;bottom:0;left:0;display:flex;align-items:flex-end;transition:transform 0.8s cubic-bezier(0.77,0,0.175,1);pointer-events:none;z-index:2;}
 .separator{display:block;width:1px;height:16px;background:var(--white);position:relative;bottom:-1px;}
@@ -114,7 +109,6 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Ti
 #video-bg.visible{ opacity:1; }
 #stage{ z-index:10; background:#000; }
 
-/* Symbol slide overlay — LVO wordmark, matches the main site's About text */
 #about-hero{
   position:fixed;
   bottom:clamp(80px,12vh,130px);
@@ -159,7 +153,6 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Ti
   text-transform:uppercase;
 }
 
-/* Numbered slide content — full text pulled from each section */
 #slide-content{
   position:fixed;inset:0;z-index:30;
   display:flex;align-items:center;justify-content:center;
@@ -275,13 +268,6 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Ti
 
   <div id="slide-content"><div class="slide-inner"></div></div>
 
-  <!--
-    Slide order reads 4 · 3 · 2 · 1 · symbol, left to right. To add a real
-    photo to any of the four numbered slides, fill in that entry's img /
-    mobile_img in the SLIDES array below — same pattern as wearelvo.com's
-    index.html. Add another slide by inserting a new <li data-idx="N">
-    here, a matching SLIDES entry, and a controller dot.
-  -->
   <div id="stage-nav">
     <ul id="screen-page-nav">
       <li data-idx="0"></li>
@@ -327,9 +313,6 @@ if (isMobileDevice) {
 const ASSETS = 'https://assets.wearelvo.com/';
 function getImageUrl(desktopImg, mobileImg){ return isMobileDevice ? mobileImg : desktopImg; }
 
-// Reversed order: numbered content slides first, symbol (the secret-transition
-// landing photo) last. Fill in img/mobile_img on the numbered slides once you
-// have photos for them — until then they render on the plain water backdrop.
 const SLIDES = [
   {
     num:'4', img: ASSETS+'LVOAL.jpg', mobile_img: ASSETS+'LVOAP.JPG',
@@ -377,8 +360,6 @@ const SLIDES = [
 const TOTAL = SLIDES.length;
 const SYMBOL_IDX = TOTAL - 1;
 
-// Mirrors wearelvo.com's secret transition — swiping/clicking forward past
-// the symbol slide blends into the main site's About photo, then hands off.
 const HOME_SLIDE = { img: ASSETS+'LVO%20R.jpg', mobile_img: ASSETS+'LVO%20Mobile%20R.jpg' };
 const HOME_URL = 'https://wearelvo.com/';
 
@@ -468,20 +449,11 @@ const textures = new Array(TOTAL).fill(null);
 const loader = new THREE.TextureLoader();
 loader.crossOrigin = 'anonymous';
 
-// Land directly on the symbol slide — that's the photo the main site's
-// secret transition already blended into, so there's no visible seam.
 let current = SYMBOL_IDX, transitioning=false, transitionStart=0;
 const TRANS_DUR=900;
 
-// Loading screen: minimum 2s, but never dismisses before the landing
-// slide's photo is actually ready — avoids a flash of the shader's raw
-// placeholder color. If that image ever fails to load entirely, the error
-// callback below still flips the flag so the screen doesn't hang forever.
 let landingTextureLoaded = false;
 
-// Motion sickness gate: starts from the cookie set on warning.wearelvo.com,
-// but can also be flipped live via the mode-toggle button (top right) —
-// no page reload needed either way.
 let imagesAllowed = window.__LVO_MOTION_CONSENT__ !== 'denied';
 let homeTexture = null;
 
@@ -523,7 +495,6 @@ if(imagesAllowed){
   landingTextureLoaded = true;
 }
 
-// Loading screen dismissal: waits for the flag above plus a 2s minimum.
 const loadingScreen = document.getElementById('loading-screen');
 const siteWrap = document.getElementById('site-wrap');
 function dismissLoader(){
@@ -635,9 +606,6 @@ function goTo(idx){
   setTimeout(()=>transitioning=false, TRANS_DUR+100);
 }
 
-// Moving forward past the symbol slide blends into the main site's About
-// photo, then hands off to wearelvo.com — same technique as the reverse
-// trip on the main site.
 function goToSecretHome(){
   if(transitioning) return;
   transitioning=true;
