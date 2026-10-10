@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>
+(function(){
+  function getCookie(name){
+    var m = document.cookie.match(new RegExp('(?:^|; )'+name+'=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+  var consent = getCookie('lvo_motion_consent');
+  window.__LVO_MOTION_CONSENT__ = consent;
+
+  var justWarned = new URLSearchParams(location.search).get('warned') === '1';
+  if(!justWarned){
+    location.replace('https://warning.wearelvo.com/?return=' + encodeURIComponent(location.origin + location.pathname));
+  } else if(window.history && history.replaceState){
+    history.replaceState({}, '', location.pathname);
+  }
+})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+<title>About · LVO Holdings</title>
+<meta name="description" content="LVO Holdings — About Legion V. Omni-Operations.">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;600;700;900&family=Cormorant+SC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--white:#fff;--dim:rgba(255,255,255,0.5);--dimmer:rgba(255,255,255,0.25);--purple:#7F77DD;--red-hi:#CC2020;--chrome:#C8C8D0;}
+html,body{width:100%;height:100%;height:100dvh;background:#000;overflow:hidden;font-family:'Times New Roman',Georgia,serif;user-select:none;}
+
+@media (pointer:coarse){ body{cursor:auto;} }
+@media (pointer:fine){ body{cursor:none;} }
+
+#loading-screen{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.8rem;transition:opacity 0.8s ease;}
+#loading-screen.fade-out{opacity:0;pointer-events:none;}
+.ls-rule{width:1px;height:80px;background:linear-gradient(to bottom,transparent,var(--purple),transparent);animation:lsPulse 1.8s ease-in-out infinite;}
+@keyframes lsPulse{0%,100%{opacity:.3}50%{opacity:1}}
+.ls-name{font-family:'Cinzel',serif;font-size:2.8rem;font-weight:900;letter-spacing:.25em;color:#C8C8D0;line-height:1;}
+.ls-sub{font-family:'Cormorant SC',serif;font-size:.48rem;letter-spacing:.5em;color:rgba(255,255,255,0.38);text-transform:uppercase;text-align:center;padding:0 1rem;}
+.ls-bar{width:200px;height:1px;background:rgba(127,119,221,.2);overflow:hidden;position:relative;}
+.ls-bar-fill{position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--purple),transparent);animation:lsBar 1.4s ease-in-out infinite;}
+@keyframes lsBar{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+
+#site-wrap{opacity:0;transition:opacity 0.8s ease;}
+#site-wrap.visible{opacity:1;}
+
+#stage{position:fixed;inset:-3%;z-index:0;background:transparent;will-change:transform;}
+#stage canvas{width:100%!important;height:100%!important;display:block;}
+
+#title{position:fixed;top:0;left:0;right:0;z-index:35;padding:clamp(14px,3vw,28px) clamp(16px,4vw,40px);}
+#title a{text-decoration:none;color:var(--white);font-size:clamp(9px,2vw,13px);letter-spacing:0.3em;display:inline-flex;align-items:center;position:relative;}
+#title-indicator{display:inline-block;width:40px;height:1px;background:var(--white);margin-left:12px;transform-origin:left center;transform:scaleX(0.75);transition:transform 0.4s;}
+#title a:hover #title-indicator{transform:scaleX(1);}
+
+#return-link{position:fixed;top:0;right:0;z-index:35;padding:clamp(14px,3vw,28px) clamp(16px,4vw,40px);}
+#return-link a{text-decoration:none;color:var(--white);font-size:clamp(9px,2vw,13px);letter-spacing:0.3em;text-transform:uppercase;display:inline-flex;align-items:center;gap:12px;position:relative;}
+#return-rune{display:inline-block;font-size:1.35em;line-height:1;color:var(--white);transform-origin:center;transition:transform 0.4s;}
+#return-link a:hover #return-rune{transform:translateX(4px);}
+@media(max-width:768px){
+  #return-link-label{display:none;}
+}
+
+/* return link sits left of the burger */
+#return-link{right:56px;}
+@media(max-width:768px){#return-link{right:52px;}}
+
+/* ---------- burger + menu (holds Disable Images) ---------- */
+#menu-btn{
+  position:fixed;z-index:60;
+  top:calc(env(safe-area-inset-top,0px) + clamp(6px,1.6vw,18px));
+  right:clamp(6px,2.4vw,28px);
+  display:flex;align-items:center;justify-content:center;
+  width:48px;height:48px;background:none;border:0;cursor:pointer;color:#fff;-webkit-tap-highlight-color:transparent;
+  transition:color .3s;
+}
+#menu-btn .rune{position:absolute;width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:square;stroke-linejoin:miter;
+  filter:drop-shadow(0 0 5px rgba(0,0,0,.85));transition:opacity .35s ease,transform .5s cubic-bezier(.77,0,.175,1);}
+#menu-btn .rune-dot{fill:currentColor;stroke:none;}
+#menu-btn .rune-open{opacity:0;transform:rotate(-90deg) scale(.6);}
+#menu-btn.open .rune-closed{opacity:0;transform:rotate(90deg) scale(.6);}
+#menu-btn.open .rune-open{opacity:1;transform:none;}
+#menu-btn:hover,#menu-btn:focus-visible{color:#ff6b6b;}
+#menu-btn:hover .rune{filter:drop-shadow(0 0 6px rgba(204,32,32,.8));}
+#menu-btn:focus-visible{outline:1px solid var(--purple);outline-offset:-4px;}
+
+#site-menu{
+  position:fixed;inset:0;z-index:50;
+  display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:1.6rem;
+  padding:calc(env(safe-area-inset-top,0px) + 64px) 24px calc(env(safe-area-inset-bottom,0px) + 24px);
+  background:rgba(0,0,0,.95);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  overflow-y:auto;opacity:0;visibility:hidden;
+  transition:opacity .4s ease,visibility 0s linear .4s;
+}
+#site-menu.open{opacity:1;visibility:visible;transition:opacity .4s ease,visibility 0s;}
+#site-menu ul{list-style:none;display:flex;flex-direction:column;align-items:center;gap:.2rem;}
+#site-menu li a{
+  display:block;padding:12px 28px;color:#fff;text-decoration:none;text-align:center;
+  font-family:'Cinzel',Georgia,serif;font-weight:600;
+  font-size:clamp(20px,5.5vw,30px);letter-spacing:.16em;text-transform:uppercase;line-height:1.2;
+  transition:color .25s;
+}
+#site-menu li a:hover,#site-menu li a:active,#site-menu li a:focus-visible{color:var(--purple);outline:none;}
+#site-menu li:first-child{margin-bottom:.9rem;padding-bottom:.9rem;border-bottom:.5px solid rgba(127,119,221,.35);}
+#site-menu li:first-child a{font-size:clamp(24px,6.5vw,36px);letter-spacing:.12em;}
+#menu-mode-btn{
+  font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;
+  color:rgba(255,255,255,.8);background:rgba(0,0,0,.28);border:.5px solid rgba(255,255,255,.35);
+  padding:12px 20px;min-height:44px;cursor:pointer;transition:border-color .3s,color .3s;
+}
+#menu-mode-btn:hover{border-color:var(--purple);color:#fff;}
+#site-menu .menu-legal{display:flex;gap:1.4rem;}
+#site-menu .menu-legal a{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);text-decoration:none;padding:8px 0;
+}
+#site-menu .menu-legal a:hover{color:#fff;}
+
+#stage-nav{position:fixed;top:50%;left:0;right:0;z-index:20;transform:translateY(-50%);overflow:hidden;pointer-events:none;}
+#screen-page-nav{display:flex;list-style:none;transition:transform 0.8s cubic-bezier(0.77,0,0.175,1);will-change:transform;}
+#screen-page-nav li{flex-shrink:0;display:flex;align-items:center;justify-content:center;pointer-events:all;}
+
+#screen-controller{position:fixed;bottom:0;left:50%;z-index:35;transform:translateX(-50%);padding-bottom:clamp(12px,3vw,20px);pointer-events:all;}
+
+#legal-links{position:fixed;bottom:clamp(12px,3vw,20px);right:clamp(16px,4vw,40px);z-index:35;display:flex;gap:1.2rem;pointer-events:all;}
+#legal-links a{font-family:'Cinzel',serif;font-size:clamp(7px,1vw,9px);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,0.35);text-decoration:none;border-bottom:0.5px solid rgba(139,0,0,0.3);padding-bottom:2px;transition:color .3s,border-color .3s;}
+#legal-links a:hover{color:var(--white);border-color:var(--red-hi);}
+@media(max-width:768px){
+  #legal-links{left:50%;right:auto;transform:translateX(-50%);bottom:64px;gap:1rem;}
+}
+@media(max-width:600px){#legal-links{gap:0.7rem;}#legal-links a{font-size:7px;}}
+#screen-controller .inner{position:relative;display:flex;align-items:flex-end;}
+#knob{position:absolute;bottom:0;left:0;display:flex;align-items:flex-end;transition:transform 0.8s cubic-bezier(0.77,0,0.175,1);pointer-events:none;z-index:2;}
+.separator{display:block;width:1px;height:16px;background:var(--white);position:relative;bottom:-1px;}
+#controller-parent{list-style:none;display:flex;align-items:flex-end;border-bottom:0.5px solid rgba(255,255,255,0.2);}
+#controller-parent li{cursor:pointer;}
+.numerator{display:block;font-size:clamp(9px,2vw,11px);letter-spacing:0.1em;color:var(--dimmer);padding:0 clamp(5px,1.5vw,8px) 8px;transition:color 0.3s;line-height:1;}
+#controller-parent li.is-current .numerator{color:var(--white);}
+.controller-item.is-symbol .numerator{font-size:clamp(11px,2vw,15px);letter-spacing:0;padding-bottom:6px;color:var(--dimmer);}
+.controller-item.is-symbol.is-current .numerator{color:var(--white);}
+
+#trailing-cursor-canvas{position:fixed;top:0;left:0;pointer-events:none;z-index:900;}
+
+@media (max-width:768px){
+  #stage{inset:0;transform:none!important;will-change:auto;}
+  #title a span:first-child{display:none;}
+  #title a::before{content:'LVO';font-family:'Cinzel',serif;font-size:13px;letter-spacing:.3em;color:var(--white);}
+  #stage canvas{opacity:0.95;}
+}
+
+#video-bg{
+  position:fixed;inset:0;z-index:5;
+  width:100%;height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 0.9s ease;
+  pointer-events:none;
+}
+#video-bg.visible{ opacity:1; }
+#stage{ z-index:10; background:#000; }
+
+#about-hero{
+  position:fixed;
+  bottom:clamp(80px,12vh,130px);
+  left:clamp(40px,7vw,120px);
+  z-index:30;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.6s ease;
+}
+#about-hero.visible{ opacity:1; }
+@media(min-width:769px){
+  #about-hero{ bottom:auto; top:50%; transform:translateY(-50%); }
+  #about-hero.visible{ transform:translateY(-50%); }
+}
+@media(max-width:768px){
+  #about-hero{
+    left:0 !important; right:0 !important; width:100%;
+    bottom:auto; top:62%; transform:translateY(-50%);
+    text-align:center; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+  }
+  #about-hero.visible{ transform:translateY(-50%); }
+  #about-hero .about-lvo{ font-size:clamp(48px,12vw,72px); }
+}
+#about-hero .about-lvo{
+  display:block;
+  font-family:'Cinzel',serif;
+  font-weight:900;
+  font-size:clamp(32px,4.5vw,64px);
+  letter-spacing:.18em;
+  color:#fff;
+  line-height:1;
+  margin-bottom:1rem;
+  text-shadow:0 2px 40px rgba(0,0,0,0.9);
+}
+#about-hero .about-sub{
+  font-family:'Cinzel',serif;
+  font-size:clamp(8px,1vw,11px);
+  font-weight:600;
+  letter-spacing:.45em;
+  color:rgba(255,255,255,0.75);
+  text-transform:uppercase;
+}
+
+#slide-content{
+  position:fixed;inset:0;z-index:30;
+  display:flex;align-items:center;justify-content:center;
+  padding:6.5rem 1.6rem 3rem;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.6s ease;
+}
+#slide-content.visible{ opacity:1; pointer-events:auto; }
+.slide-inner{
+  max-width:820px;width:100%;max-height:100%;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;
+  text-align:center;padding:1.6rem clamp(1rem,3vw,2.2rem) 1.8rem;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,0.78) 0%,rgba(0,0,0,0.68) 70%,rgba(0,0,0,0.5) 100%);
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+  border-radius:2px;
+}
+.slide-inner::-webkit-scrollbar{ width:4px; }
+.slide-inner::-webkit-scrollbar-thumb{ background:rgba(139,0,0,0.35); }
+
+.slide-eyebrow{
+  font-family:'Cinzel',serif;
+  font-size:clamp(10px,1.5vw,12px);
+  letter-spacing:.4em;
+  color:#FF5A5A;
+  text-transform:uppercase;
+  margin-bottom:1.1rem;
+}
+.slide-lvo{
+  font-family:'Cinzel',serif;font-weight:900;
+  font-size:clamp(2.1rem,7.5vw,4.2rem);
+  letter-spacing:.2em;color:#fff;line-height:1;
+  margin-bottom:.5rem;
+}
+.slide-subtitle{
+  font-family:'Cinzel',serif;
+  font-size:clamp(10px,1.7vw,13px);
+  letter-spacing:.35em;color:rgba(255,255,255,0.85);
+  text-transform:uppercase;margin-bottom:2rem;
+}
+.slide-heading-stack{
+  font-family:'IM Fell English',Georgia,serif;font-style:italic;
+  font-size:clamp(32px,6.5vw,72px);color:#fff;
+  line-height:1.08;letter-spacing:.03em;margin-bottom:1.8rem;
+  text-shadow:0 2px 40px rgba(0,0,0,0.9);
+}
+.slide-heading-stack span{ display:block; }
+.slide-body-text{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-weight:500;font-style:normal;
+  font-size:clamp(1.1rem,2.3vw,1.3rem);line-height:1.75;
+  color:#fff;max-width:660px;margin:0 auto;text-shadow:0 1px 3px rgba(0,0,0,0.9);
+}
+
+.slide-list{ display:flex;flex-direction:column;gap:1.8rem;text-align:left;margin-top:0.5rem; }
+.slide-list-item{ border-top:0.5px solid rgba(255,90,90,0.4);padding-top:1.1rem; }
+.slide-list-num{
+  font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.3em;
+  color:#FF5A5A;display:block;margin-bottom:.5rem;
+}
+.slide-list-title{
+  font-family:'Cinzel',serif;font-size:1rem;font-weight:700;
+  letter-spacing:.14em;color:#fff;text-transform:uppercase;
+  margin-bottom:.5rem;
+}
+.slide-list-text{
+  font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-style:normal;
+  font-size:clamp(1.08rem,2vw,1.22rem);line-height:1.7;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.9);
+}
+
+.slide-quote{
+  font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-style:italic;
+  font-size:clamp(1.3rem,3.8vw,2rem);line-height:1.75;
+  color:#fff;margin-bottom:1.8rem;text-shadow:0 1px 3px rgba(0,0,0,0.9);
+}
+.slide-quote-attr{
+  font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.35em;color:#FF5A5A;
+}
+
+/* ---------- crest in title ---------- */
+.title-crest{width:26px;height:26px;object-fit:contain;margin-right:12px;flex-shrink:0;filter:drop-shadow(0 0 8px rgba(0,0,0,.9)) drop-shadow(0 0 10px rgba(204,32,32,.25));transition:transform .5s ease,filter .5s ease;}
+#title a:hover .title-crest{transform:rotate(8deg) scale(1.08);filter:drop-shadow(0 0 8px rgba(0,0,0,.9)) drop-shadow(0 0 14px rgba(204,32,32,.55));}
+
+/* ---------- refined content card ---------- */
+.slide-inner{
+  position:relative;
+  background:linear-gradient(180deg,rgba(10,6,6,.82) 0%,rgba(0,0,0,.78) 55%,rgba(8,4,4,.86) 100%);
+  border:.5px solid rgba(255,255,255,.08);
+  border-top:1px solid rgba(204,32,32,.55);
+  border-radius:3px;
+  box-shadow:0 30px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.04);
+  -webkit-backdrop-filter:blur(10px) saturate(1.1);backdrop-filter:blur(10px) saturate(1.1);
+  scrollbar-width:thin;scrollbar-color:rgba(204,32,32,.45) transparent;
+}
+.slide-inner .slide-heading-stack{
+  position:relative;padding-bottom:1.6rem;margin-bottom:1.6rem;
+}
+.slide-inner .slide-heading-stack::after{
+  content:'᛭';display:block;margin:1.1rem auto 0;width:100%;
+  font-family:'Cinzel',serif;font-size:14px;line-height:1;color:#FF5A5A;letter-spacing:0;
+  text-shadow:0 0 14px rgba(204,32,32,.7);
+  background:linear-gradient(90deg,transparent,rgba(255,90,90,.55) 42%,transparent 42.5%,transparent 57.5%,rgba(255,90,90,.55) 58%,transparent) center 50%/100% 1px no-repeat;
+}
+.slide-list-item{
+  position:relative;padding:1.2rem 1rem 1.1rem 1.2rem;border-top:0;
+  border-left:1px solid rgba(255,90,90,.28);
+  background:linear-gradient(90deg,rgba(204,32,32,.06),transparent 70%);
+  transition:background .4s ease,border-color .4s ease,transform .4s ease;
+}
+.slide-list-item:hover{border-left-color:#FF5A5A;background:linear-gradient(90deg,rgba(204,32,32,.13),transparent 80%);transform:translateX(3px);}
+.slide-list-num{font-size:.8rem;letter-spacing:.4em;text-shadow:0 0 12px rgba(204,32,32,.6);}
+.slide-list-title{font-size:1.05rem;letter-spacing:.18em;}
+.slide-quote{position:relative;}
+.slide-quote::before{content:'“';display:block;font-family:'IM Fell English',serif;font-size:4rem;line-height:.6;color:rgba(255,90,90,.6);margin-bottom:.4rem;}
+.slide-lvo{text-shadow:0 0 40px rgba(204,32,32,.35);}
+.slide-eyebrow{display:flex;align-items:center;justify-content:center;gap:1rem;}
+.slide-eyebrow::before,.slide-eyebrow::after{content:'';height:1px;width:clamp(18px,6vw,48px);background:linear-gradient(90deg,transparent,rgba(255,90,90,.7));}
+.slide-eyebrow::after{transform:scaleX(-1);}
+
+/* staggered reveal */
+@keyframes slideRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#slide-content.visible .slide-heading-stack,
+#slide-content.visible .slide-list-item,
+#slide-content.visible .slide-quote,
+#slide-content.visible .slide-quote-attr,
+#slide-content.visible .slide-eyebrow,
+#slide-content.visible .slide-lvo,
+#slide-content.visible .slide-subtitle,
+#slide-content.visible .slide-body-text{animation:slideRise .8s cubic-bezier(.16,1,.3,1) both;}
+#slide-content.visible .slide-list-item:nth-child(1){animation-delay:.15s}
+#slide-content.visible .slide-list-item:nth-child(2){animation-delay:.28s}
+#slide-content.visible .slide-list-item:nth-child(3){animation-delay:.41s}
+#slide-content.visible .slide-list-item:nth-child(4){animation-delay:.54s}
+#slide-content.visible .slide-quote{animation-delay:.2s}
+#slide-content.visible .slide-quote-attr{animation-delay:.45s}
+#slide-content.visible .slide-body-text{animation-delay:.3s}
+@media(prefers-reduced-motion:reduce){
+  #slide-content.visible *{animation:none!important}
+}
+
+/* ---------- mobile ---------- */
+@media(max-width:768px){
+  #title{padding-top:calc(env(safe-area-inset-top,0px) + 16px);}
+  .title-crest{width:22px;height:22px;margin-right:10px;}
+  #return-link{padding-top:calc(env(safe-area-inset-top,0px) + 16px);}
+  #slide-content{
+    align-items:flex-start;
+    padding:calc(env(safe-area-inset-top,0px) + 4.4rem) .9rem calc(env(safe-area-inset-bottom,0px) + 6.6rem);
+  }
+  .slide-inner{
+    max-height:100%;padding:1.3rem 1.1rem 1.6rem;
+    -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 28px),transparent);
+    mask-image:linear-gradient(to bottom,#000 calc(100% - 28px),transparent);
+    overscroll-behavior:contain;
+  }
+  .slide-heading-stack{font-size:clamp(28px,9vw,40px);margin-bottom:1.2rem;}
+  .slide-inner .slide-heading-stack{padding-bottom:1.1rem;margin-bottom:1.2rem;}
+  .slide-list{gap:1rem;}
+  .slide-list-item{padding:1rem .9rem 1rem 1rem;}
+  .slide-list-title{font-size:.92rem;letter-spacing:.14em;}
+  .slide-list-text,.slide-body-text{font-size:1.06rem;line-height:1.65;}
+  .slide-quote{font-size:clamp(1.15rem,5.2vw,1.5rem);line-height:1.6;}
+  .slide-lvo{font-size:clamp(2rem,10vw,3rem);}
+  .slide-subtitle{margin-bottom:1.4rem;letter-spacing:.28em;}
+  .slide-eyebrow{font-size:9px;letter-spacing:.28em;}
+  #legal-links{bottom:calc(env(safe-area-inset-bottom,0px) + 54px);}
+  #screen-controller{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 14px);}
+  .numerator{padding:6px clamp(7px,2.4vw,10px) 12px;}
+}
+@media(max-width:380px){
+  .slide-list-text,.slide-body-text{font-size:1rem;}
+  #title a::before{font-size:12px;}
+}
+</style>
+
+<style id="lvo-hover-colors">
+/* ---- hover colour coding: divisions = their own colour, everything else = red ---- */
+:root{--c-vindex:#C8A96E;--c-alliance:#A359EC;--c-operations:#1D9E75;--c-careers:#7CC8F5;--c-hover-red:#ff6b6b;}
+
+/* menu overlay: default hover = red (LVO-O, About, Connect) */
+:is(#site-menu,#siteMenu) li a:is(:hover,:active,:focus-visible){color:var(--c-hover-red);}
+:is(#site-menu,#siteMenu) li:first-child{border-bottom-color:rgba(204,32,32,.35);}
+/* menu overlay: divisions + careers */
+:is(#site-menu,#siteMenu) li a[href$="/vindex/"]:is(:hover,:active,:focus-visible){color:var(--c-vindex);}
+:is(#site-menu,#siteMenu) li a[href$="/alliance/"]:is(:hover,:active,:focus-visible){color:var(--c-alliance);}
+:is(#site-menu,#siteMenu) li a[href$="/operations/"]:is(:hover,:active,:focus-visible){color:var(--c-operations);}
+:is(#site-menu,#siteMenu) li a[href$="/careers/"]:is(:hover,:active,:focus-visible){color:var(--c-careers);}
+</style>
+
+<style id="about-redesign">
+/* ---------- About redesign: fit on one screen + let the background show ---------- */
+/* content frame: no more boxed, blurred slab */
+.slide-inner{
+  background:radial-gradient(ellipse closest-side,rgba(0,0,0,.5) 0%,rgba(0,0,0,.34) 62%,rgba(0,0,0,0) 100%);
+  border:0;box-shadow:none;
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+}
+.slide-inner::-webkit-scrollbar{width:0;height:0}
+.slide-inner{scrollbar-width:none}
+
+/* heading on ONE line instead of a 3-line stack */
+.slide-heading-stack span{display:inline}
+.slide-heading-stack span+span{margin-left:.28em}
+.slide-heading-stack{text-shadow:0 2px 30px rgba(0,0,0,.95),0 0 10px rgba(0,0,0,.65)}
+
+/* item cards: small glass tiles with gaps, so the scene shows between them */
+.slide-list-item{
+  background:rgba(8,4,4,.5);
+  border-left:2px solid rgba(255,90,90,.5);
+}
+.slide-list-item:hover{background:linear-gradient(90deg,rgba(204,32,32,.22),rgba(8,4,4,.52) 85%);}
+.slide-list-text,.slide-body-text,.slide-quote{text-shadow:0 1px 6px rgba(0,0,0,.95)}
+
+@media(min-width:769px){
+  #slide-content{padding:5rem 2.4rem 4rem}
+  .slide-inner{max-width:780px;padding:.6rem clamp(1rem,3vw,2rem)}
+  #slide-content[data-type="values"] .slide-inner,
+  #slide-content[data-type="timeline"] .slide-inner{max-width:1120px}
+  #slide-content[data-type="hero"] .slide-inner{max-width:860px}
+  #slide-content[data-type="values"] .slide-inner,
+  #slide-content[data-type="timeline"] .slide-inner{background:none}
+
+  .slide-heading-stack{font-size:clamp(30px,4.2vw,56px);line-height:1.1;margin-bottom:1rem}
+  .slide-inner .slide-heading-stack{padding-bottom:.2rem;margin-bottom:1.1rem}
+  .slide-inner .slide-heading-stack::after{margin-top:.7rem}
+
+  #slide-content[data-type="values"] .slide-list,
+  #slide-content[data-type="timeline"] .slide-list{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem 1.2rem;margin-top:0;
+  }
+  .slide-list-item{padding:1.05rem 1.25rem 1.05rem 1.3rem}
+  .slide-list-num{margin-bottom:.35rem}
+  .slide-list-title{font-size:1rem;margin-bottom:.4rem}
+  .slide-list-text{font-size:clamp(1rem,1.15vw,1.14rem);line-height:1.55}
+
+  .slide-lvo{margin-bottom:.3rem}
+  .slide-subtitle{margin-bottom:1.1rem}
+  .slide-body-text{font-size:clamp(1.05rem,1.35vw,1.25rem);line-height:1.65}
+}
+/* short laptop screens */
+@media(min-width:769px) and (max-height:760px){
+  #slide-content{padding:4.4rem 2.4rem 3.4rem}
+  .slide-heading-stack{font-size:clamp(26px,3.6vw,44px)}
+  .slide-inner .slide-heading-stack{margin-bottom:.8rem}
+  .slide-list-item{padding:.8rem 1.1rem .8rem 1.2rem}
+  .slide-list-text{font-size:.98rem;line-height:1.5}
+  .slide-list-title{font-size:.92rem}
+  .slide-lvo{font-size:clamp(1.8rem,5vw,3rem)}
+  .slide-body-text{font-size:1.05rem;line-height:1.55}
+}
+@media(max-width:768px){
+  .slide-inner{background:linear-gradient(180deg,rgba(0,0,0,.5),rgba(0,0,0,.4))}
+  #slide-content[data-type="values"] .slide-inner,
+  #slide-content[data-type="timeline"] .slide-inner{background:none}
+  .slide-list-item{padding:.85rem .9rem .85rem 1rem}
+  #slide-content[data-type="values"] .slide-list,
+  #slide-content[data-type="timeline"] .slide-list{display:flex}
+}
+</style>
+</head>
+<body>
+
+<div id="loading-screen">
+  <div class="ls-rule"></div>
+  <div class="ls-name">LVO</div>
+  <div class="ls-sub">Legion V. Omni-Operations</div>
+  <div class="ls-bar"><div class="ls-bar-fill"></div></div>
+</div>
+
+<div id="site-wrap">
+
+  <div id="stage"><canvas></canvas></div>
+  <video id="video-bg" src="https://assets.wearelvo.com/LVO.mp4" loop muted playsinline preload="auto"></video>
+
+  <div id="title">
+    <a href="https://wearelvo.com/" id="title-link">
+      <img class="title-crest" src="assets/logo.png" alt="" width="26" height="26" decoding="async"><span style="letter-spacing:0.3em;">Legion V. Omni-Operations</span>
+      <span id="title-indicator"></span>
+    </a>
+  </div>
+
+  <div id="return-link">
+    <a href="https://wearelvo.com/" id="return-link-a">
+      <span id="return-link-label">Return</span>
+      <span id="return-rune">᛭</span>
+    </a>
+  </div>
+
+  <button id="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-menu"><svg class="rune rune-closed" viewBox="0 0 28 28" aria-hidden="true"><path d="M14 2.5V25.5M14 11.5L5 3.5M14 11.5L23 3.5M9 19.5L14 15.5L19 19.5"/><path class="rune-dot" d="M14 27.2l1.1-1.1L14 25l-1.1 1.1z"/></svg><svg class="rune rune-open" viewBox="0 0 28 28" aria-hidden="true"><path d="M5.5 5.5L22.5 22.5M22.5 5.5L5.5 22.5M14 2.5L25.5 14L14 25.5L2.5 14Z"/></svg></button>
+  <nav id="site-menu" aria-label="Main menu">
+    <ul>
+      <li><a href="https://wearelvo.com/" aria-label="LVO-O home">𝐋𝐕𝐎-𝐎</a></li>
+      <li><a href="https://wearelvo.com/vindex/">Vindex</a></li>
+      <li><a href="https://wearelvo.com/alliance/">Alliance</a></li>
+      <li><a href="https://wearelvo.com/operations/">Operations</a></li>
+      <li><a href="https://wearelvo.com/careers/">Careers</a></li>
+      <li><a href="https://about.wearelvo.com/" class="active" aria-current="page">About</a></li>
+      <li><a href="https://contact.wearelvo.com/">Connect</a></li>
+    </ul>
+    <button id="menu-mode-btn" type="button">Disable Images</button>
+    <div class="menu-legal">
+      <a href="https://privacy.wearelvo.com">Privacy</a>
+      <a href="https://tos.wearelvo.com">Terms</a>
+    </div>
+  </nav>
+
+  <div id="about-hero">
+    <span class="about-lvo">LVO</span>
+    <span class="about-sub">About Us</span>
+  </div>
+
+  <div id="slide-content"><div class="slide-inner"></div></div>
+
+  <div id="stage-nav">
+    <ul id="screen-page-nav">
+      <li data-idx="0"></li>
+      <li data-idx="1"></li>
+      <li data-idx="2"></li>
+      <li data-idx="3"></li>
+      <li class="about-slide" data-idx="4"></li>
+    </ul>
+  </div>
+
+  <div id="screen-controller">
+    <div class="inner">
+      <div id="knob"><span class="separator"></span></div>
+      <ul class="nav-group" id="controller-parent">
+        <li class="nav-list controller-item" data-idx="0"><span class="numerator">4</span></li>
+        <li class="nav-list controller-item" data-idx="1"><span class="numerator">3</span></li>
+        <li class="nav-list controller-item" data-idx="2"><span class="numerator">2</span></li>
+        <li class="nav-list controller-item" data-idx="3"><span class="numerator">1</span></li>
+        <li class="nav-list controller-item is-symbol is-current" data-idx="4"><span class="numerator">♱ᛪ༙</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="legal-links">
+    <a href="https://privacy.wearelvo.com">Privacy Policy</a>
+    <a href="https://tos.wearelvo.com">Terms of Service</a>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const isMobileDevice = window.innerWidth <= 768;
+const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+
+let WATER_INTENSITY = 0.028;
+if (isMobileDevice) {
+  WATER_INTENSITY = 0.015;
+} else if (isTablet) {
+  WATER_INTENSITY = 0.022;
+}
+
+const ASSETS = 'https://assets.wearelvo.com/';
+function getImageUrl(desktopImg, mobileImg){ return isMobileDevice ? mobileImg : desktopImg; }
+
+const SLIDES = [
+  {
+    num:'4', img: ASSETS+'LVOAL.jpg', mobile_img: ASSETS+'LVOAP.JPG',
+    type:'values',
+    heading:['WHAT','WE','STAND FOR'],
+    items:[
+      { num:'I',   title:'Legacy Over Liquidity', text:'We measure success in decades, not quarters. Every decision is made with the next generation in mind — not the next exit.' },
+      { num:'II',  title:'Discretion By Design',  text:'We do not court attention. The work speaks through results — quietly, consistently, without announcement.' },
+      { num:'III', title:'Capital With Purpose',  text:'Through LVO Operations, we deploy resources into social services and community infrastructure. We believe ownership carries obligation.' },
+      { num:'IV',  title:'Access Is Earned',      text:'Our Alliance arm moves on trust and track record — not pitch decks. Partnerships are built on shared values before shared returns.' }
+    ]
+  },
+  {
+    num:'3', img: ASSETS+'LVOAL.jpg', mobile_img: ASSETS+'LVOAP.JPG',
+    type:'timeline',
+    heading:['OUR','FOUNDATION'],
+    items:[
+      { year:'2026',    title:'Founded',            text:'LVO Holdings was established in Houston under a family trust — structured from the outset as a permanent, multigenerational holding entity rather than a fund or venture vehicle.' },
+      { year:'Vindex',  title:'Real Estate',         text:'The first pillar — Vindex — was activated to acquire and develop properties positioned for generational appreciation. Protection of tangible assets is the bedrock of the structure.' },
+      { year:'Ops',     title:'Operations',          text:'LVO Operations channels capital into social services and community infrastructure — because durable wealth requires durable communities. Where purpose is not the byproduct of profit, but its precondition.' },
+      { year:'Alliance',title:'Strategic Ventures',  text:'LVO Alliance exists for the rare relationship — partnerships forged on aligned conviction. Capital deployed here moves slowly, intentionally, and only with full confidence in the people behind it.' }
+    ]
+  },
+  {
+    num:'2', img: ASSETS+'LVOAL.jpg', mobile_img: ASSETS+'LVOAP.JPG',
+    type:'quote',
+    heading:['OUR','ETHOS'],
+    quote:'We were not built to be known.\nWe were built to endure.\nThe legacy is the work.',
+    attribution:'LVO Holdings · U.S. · Est. 2026'
+  },
+  {
+    num:'1', img: ASSETS+'LVOAL.jpg', mobile_img: ASSETS+'LVOAP.JPG',
+    type:'hero',
+    eyebrow:'Est. 2026 · Texas, United States',
+    title:'LVO',
+    subtitle:'Legion V · Omni-Operations',
+    heading:['WHO','WE ARE'],
+    text:'LVO Holdings is a private holding company rooted in the United States — built to own, operate, and steward assets across real estate, social infrastructure, and strategic capital ventures. We are not a firm that chases trends. We are a structure designed for permanence.'
+  },
+  {
+    num:'symbol', img: ASSETS+'LVOAL.jpg', mobile_img: ASSETS+'LVOAP.JPG',
+    type:'symbol'
+  },
+];
+let menuOpen = false;
+const menuBtn = document.getElementById('menu-btn');
+const siteMenu = document.getElementById('site-menu');
+function setMenu(open){
+  menuOpen = open;
+  menuBtn.classList.toggle('open', open);
+  siteMenu.classList.toggle('open', open);
+  menuBtn.setAttribute('aria-expanded', String(open));
+  menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  if(open) siteMenu.querySelector('a').focus({preventScroll:true});
+}
+menuBtn.addEventListener('click', ()=> setMenu(!menuOpen));
+siteMenu.addEventListener('click', e=>{ if(e.target.closest('a')) setMenu(false); });
+window.addEventListener('keydown', e=>{ if(e.key==='Escape' && menuOpen){ setMenu(false); menuBtn.focus(); } });
+const TOTAL = SLIDES.length;
+const SYMBOL_IDX = TOTAL - 1;
+
+const HOME_SLIDE = { img: ASSETS+'LVO%20R.jpg', mobile_img: ASSETS+'LVO%20Mobile%20R.jpg' };
+const HOME_URL = 'https://wearelvo.com/';
+
+const VIDEO_SLIDES = new Set([]);
+const videoBg  = document.getElementById('video-bg');
+const stageCanvas = document.querySelector('#stage');
+function updateVideoBackground(idx){
+  if(VIDEO_SLIDES.has(idx)){
+    videoBg.classList.add('visible');
+    stageCanvas.classList.add('video-mode');
+  } else {
+    videoBg.classList.remove('visible');
+    stageCanvas.classList.remove('video-mode');
+  }
+}
+updateVideoBackground(SYMBOL_IDX);
+
+const canvas = document.querySelector('#stage canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:false, alpha:false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const scene  = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+const geo    = new THREE.PlaneGeometry(2,2);
+
+const vertSrc = `
+varying vec2 vUv;
+void main(){ vUv=uv; gl_Position=vec4(position,1.0); }
+`;
+
+const fragSrc = `
+precision highp float;
+uniform float uTime;
+uniform float uBlend;
+uniform sampler2D uTexA;
+uniform sampler2D uTexB;
+uniform int uHasTexA;
+uniform int uHasTexB;
+uniform float uWaterIntensity;
+varying vec2 vUv;
+
+float wave(vec2 p, float freq, float phase){
+  return sin(p.x * freq + uTime * 0.3 + phase)
+       * cos(p.y * freq * 0.8 + uTime * 0.2 + phase * 1.3);
+}
+
+void main(){
+  vec2 uv = vUv;
+
+  float w1 = wave(uv, 2.8,  0.0);
+  float w2 = wave(uv, 4.9,  2.1);
+  float w3 = wave(uv * 1.3, 1.9, 4.3);
+  float w4 = wave(uv * 0.6, 6.2, 1.7);
+
+  vec2 disp;
+  disp.x = (w1*0.5 + w2*0.3 + w3*0.15 + w4*0.05) * uWaterIntensity;
+  disp.y = (w2*0.5 + w1*0.25 + w4*0.2  + w3*0.05) * uWaterIntensity;
+  vec2 wuv = clamp(uv + disp, 0.0, 1.0);
+
+  vec3 colA, colB;
+  if(uHasTexA == 1){ colA = texture2D(uTexA, wuv).rgb * 0.96; } else { colA = vec3(0.04, 0.02, 0.12); }
+  if(uHasTexB == 1){ colB = texture2D(uTexB, wuv).rgb * 0.96; } else { colB = vec3(0.04, 0.02, 0.12); }
+
+  float spec = max(0.0, w1 * 0.3 + w2 * 0.2 + 0.2);
+  vec3 sheen = vec3(0.55, 0.52, 0.72) * pow(spec, 6.0) * 0.18;
+
+  vec3 col = mix(colB, colA, clamp(uBlend, 0.0, 1.0));
+  col += sheen;
+
+  vec2 vig = uv * 2.0 - 1.0;
+  col *= 1.0 - dot(vig, vig) * 0.30;
+
+  float grain = fract(sin(dot(uv * 997.0, vec2(12.9898, 78.233))) * 43758.5453);
+  col += grain * 0.018 - 0.009;
+
+  gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+}
+`;
+
+function makePlaceholder(){
+  const d=new Uint8Array([30,30,40,255]);
+  const t=new THREE.DataTexture(d,1,1,THREE.RGBAFormat);
+  t.needsUpdate=true; return t;
+}
+
+const placeholder = makePlaceholder();
+const textures = new Array(TOTAL).fill(null);
+const loader = new THREE.TextureLoader();
+loader.crossOrigin = 'anonymous';
+
+let current = SYMBOL_IDX, transitioning=false, transitionStart=0;
+const TRANS_DUR=900;
+
+let landingTextureLoaded = false;
+
+let imagesAllowed = window.__LVO_MOTION_CONSENT__ !== 'denied';
+let homeTexture = null;
+
+function loadAllImages(){
+  SLIDES.forEach((s,i)=>{
+    if(textures[i]) return;
+    const imgUrl = getImageUrl(s.img, s.mobile_img);
+    if(!imgUrl){ if(i===SYMBOL_IDX) landingTextureLoaded = true; return; }
+    loader.load(imgUrl, tex=>{
+      tex.wrapS=tex.wrapT=THREE.ClampToEdgeWrapping;
+      tex.minFilter=THREE.LinearFilter;
+      textures[i]=tex;
+      if(i===current){
+        uniforms.uTexA.value=tex;
+        uniforms.uHasTexA.value=1;
+      }
+      if(i===SYMBOL_IDX) landingTextureLoaded = true;
+    }, undefined, ()=>{ if(i===SYMBOL_IDX) landingTextureLoaded = true; });
+  });
+  if(!homeTexture){
+    loader.load(getImageUrl(HOME_SLIDE.img, HOME_SLIDE.mobile_img), tex=>{
+      tex.wrapS=tex.wrapT=THREE.ClampToEdgeWrapping;
+      tex.minFilter=THREE.LinearFilter;
+      homeTexture = tex;
+    });
+  }
+}
+
+function clearAllImages(){
+  for(let i=0;i<textures.length;i++) textures[i]=null;
+  homeTexture = null;
+  uniforms.uTexA.value = placeholder; uniforms.uHasTexA.value = 0;
+  uniforms.uTexB.value = placeholder; uniforms.uHasTexB.value = 0;
+}
+
+if(imagesAllowed){
+  loadAllImages();
+} else {
+  landingTextureLoaded = true;
+}
+
+const loadingScreen = document.getElementById('loading-screen');
+const siteWrap = document.getElementById('site-wrap');
+function dismissLoader(){
+  loadingScreen.classList.add('fade-out');
+  siteWrap.classList.add('visible');
+  setTimeout(()=>{ loadingScreen.style.display='none'; }, 900);
+}
+function waitForLanding(){
+  if(landingTextureLoaded) dismissLoader();
+  else setTimeout(waitForLanding, 100);
+}
+setTimeout(waitForLanding, 2000);
+
+const uniforms = {
+  uTime:           {value:0},
+  uBlend:          {value:1},
+  uTexA:           {value:placeholder},
+  uTexB:           {value:placeholder},
+  uHasTexA:        {value:0},
+  uHasTexB:        {value:0},
+  uWaterIntensity: {value:WATER_INTENSITY},
+};
+
+scene.add(new THREE.Mesh(geo, new THREE.ShaderMaterial({vertexShader:vertSrc,fragmentShader:fragSrc,uniforms})));
+
+function resize(){ renderer.setSize(window.innerWidth, window.innerHeight); }
+resize();
+window.addEventListener('resize', resize);
+
+const navUl=document.getElementById('screen-page-nav');
+const ctrlUl=document.getElementById('controller-parent');
+const knob=document.getElementById('knob');
+
+function layoutNav(){
+  const isMobile = window.innerWidth <= 768;
+  const sw = isMobile ? window.innerWidth : window.innerWidth * 0.5;
+  navUl.dataset.sw = sw;
+  navUl.style.width=(sw*TOTAL)+'px';
+  Array.from(navUl.children).forEach(li=>{ li.style.width=sw+'px'; li.style.minHeight='80px'; });
+}
+layoutNav();
+window.addEventListener('resize', layoutNav);
+
+const aboutHero = document.getElementById('about-hero');
+const slideContent = document.getElementById('slide-content');
+const slideInner = slideContent.querySelector('.slide-inner');
+
+function headingStack(lines){
+  return '<div class="slide-heading-stack">' + lines.map(l=>'<span>'+l+'</span>').join('') + '</div>';
+}
+
+function renderSlideContent(idx){
+  const s = SLIDES[idx];
+  slideContent.dataset.type = s.type;
+  if(s.type === 'symbol'){
+    slideContent.classList.remove('visible');
+    slideInner.innerHTML = '';
+    aboutHero.classList.add('visible');
+    return;
+  }
+  aboutHero.classList.remove('visible');
+  let html = '';
+  if(s.type === 'hero'){
+    html += '<div class="slide-eyebrow">'+s.eyebrow+'</div>';
+    html += '<div class="slide-lvo">'+s.title+'</div>';
+    html += '<div class="slide-subtitle">'+s.subtitle+'</div>';
+    html += headingStack(s.heading);
+    html += '<p class="slide-body-text">'+s.text+'</p>';
+  } else if(s.type === 'quote'){
+    html += headingStack(s.heading);
+    html += '<p class="slide-quote">'+s.quote.split('\n').join('<br/>')+'</p>';
+    html += '<div class="slide-quote-attr">'+s.attribution+'</div>';
+  } else if(s.type === 'timeline' || s.type === 'values'){
+    html += headingStack(s.heading);
+    html += '<div class="slide-list">' + s.items.map(function(it){
+      const badge = s.type === 'timeline' ? it.year : it.num;
+      return '<div class="slide-list-item">'
+           +   '<span class="slide-list-num">'+badge+'</span>'
+           +   '<div class="slide-list-title">'+it.title+'</div>'
+           +   '<p class="slide-list-text">'+it.text+'</p>'
+           + '</div>';
+    }).join('') + '</div>';
+  }
+  slideInner.innerHTML = html;
+  slideInner.scrollTop = 0;
+  slideContent.classList.add('visible');
+}
+renderSlideContent(current);
+
+function updateNav(idx){
+  const sw = parseFloat(navUl.dataset.sw) || window.innerWidth * 0.5;
+  navUl.style.transform=`translateX(${-(sw*idx-(window.innerWidth/2-sw/2))}px)`;
+  Array.from(ctrlUl.children).forEach((li,i)=>li.classList.toggle('is-current',i===idx));
+  knob.style.transform=`translateX(${idx*(ctrlUl.offsetWidth/TOTAL)}px)`;
+}
+updateNav(current);
+
+function goTo(idx){
+  if(menuOpen||idx<0||idx>=TOTAL||transitioning||idx===current) return;
+  transitioning=true;
+  const prev=current; current=idx;
+  const tA=textures[idx], tB=textures[prev];
+  uniforms.uTexB.value=tB||placeholder; uniforms.uHasTexB.value=tB?1:0;
+  uniforms.uTexA.value=tA||placeholder; uniforms.uHasTexA.value=tA?1:0;
+  uniforms.uBlend.value=0;
+  transitionStart=performance.now();
+  updateNav(idx);
+  updateVideoBackground(idx);
+  renderSlideContent(idx);
+  setTimeout(()=>transitioning=false, TRANS_DUR+100);
+}
+
+function goToSecretHome(){
+  if(menuOpen||transitioning) return;
+  transitioning=true;
+  const tB=textures[current];
+  uniforms.uTexB.value=tB||placeholder; uniforms.uHasTexB.value=tB?1:0;
+  uniforms.uTexA.value=homeTexture||placeholder; uniforms.uHasTexA.value=homeTexture?1:0;
+  uniforms.uBlend.value=0;
+  transitionStart=performance.now();
+  aboutHero.classList.remove('visible');
+  slideContent.classList.remove('visible');
+  setTimeout(()=>{ window.location.href = HOME_URL; }, TRANS_DUR+80);
+}
+
+document.getElementById('return-link-a').addEventListener('click', e=>{
+  e.preventDefault();
+  goToSecretHome();
+});
+
+const menuModeBtn = document.getElementById('menu-mode-btn');
+function updateModeToggleLabel(){
+  menuModeBtn.textContent = imagesAllowed ? 'Disable Images' : 'Enable Images';
+}
+function setImagesAllowed(allowed){
+  imagesAllowed = allowed;
+  document.cookie = 'lvo_motion_consent=' + (allowed?'accepted':'denied') + '; domain=.wearelvo.com; path=/; max-age=' + (60*60*24*365) + '; SameSite=Lax';
+  window.__LVO_MOTION_CONSENT__ = allowed ? 'accepted' : 'denied';
+  updateModeToggleLabel();
+  if(allowed) loadAllImages(); else clearAllImages();
+}
+updateModeToggleLabel();
+menuModeBtn.addEventListener('click', ()=> setImagesAllowed(!imagesAllowed));
+
+Array.from(ctrlUl.children).forEach(li=>li.addEventListener('click',()=>goTo(+li.dataset.idx)));
+
+window.addEventListener('keydown',e=>{
+  if(menuOpen) return;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){ if(current===SYMBOL_IDX) goToSecretHome(); else goTo(current+1); }
+  if(e.key==='ArrowLeft' ||e.key==='ArrowUp')   goTo(current-1);
+});
+
+let wCool=false;
+window.addEventListener('wheel',e=>{
+  if(wCool||menuOpen)return; wCool=true;
+  if(e.deltaX>30||e.deltaY>30){ if(current===SYMBOL_IDX) goToSecretHome(); else goTo(current+1); }
+  else if(e.deltaX<-30||e.deltaY<-30) goTo(current-1);
+  setTimeout(()=>wCool=false,900);
+},{passive:true});
+
+let stageDragX=0, stageDragging=false, stageDelta=0;
+
+document.getElementById('stage').addEventListener('pointerdown',e=>{
+  stageDragging=true; stageDragX=e.clientX; stageDelta=0;
+  e.preventDefault();
+},{passive:false});
+
+window.addEventListener('touchstart', e=>{
+  if(menuOpen) return;
+  stageDragging=true;
+  stageDragX=e.touches[0].clientX;
+  stageDelta=0;
+},{passive:true});
+
+window.addEventListener('touchmove', e=>{
+  if(stageDragging) stageDelta=e.touches[0].clientX - stageDragX;
+},{passive:true});
+
+window.addEventListener('touchend', ()=>{
+  if(!stageDragging) return;
+  stageDragging=false;
+  if(stageDelta < -50){ if(current===SYMBOL_IDX) goToSecretHome(); else goTo(current+1); }
+  else if(stageDelta > 50) goTo(current-1);
+  stageDelta=0;
+});
+
+window.addEventListener('pointermove',e=>{ if(stageDragging && e.pointerType!=='touch') stageDelta=e.clientX-stageDragX; });
+window.addEventListener('pointerup',()=>{
+  if(!stageDragging) return;
+  stageDragging=false;
+  if(stageDelta<-50){ if(current===SYMBOL_IDX) goToSecretHome(); else goTo(current+1); }
+  else if(stageDelta>50) goTo(current-1);
+  stageDelta=0;
+});
+
+const isTouchDevice = window.matchMedia('(pointer:coarse)').matches;
+
+if(!isTouchDevice){
+  const CURSOR_PARTICLE_SRC = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAATCAYAAACk9eypAAAAAXNSR0IArs4c6QAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAhGVYSWZNTQAqAAAACAAFARIAAwAAAAEAAQAAARoABQAAAAEAAABKARsABQAAAAEAAABSASgAAwAAAAEAAgAAh2kABAAAAAEAAABaAAAAAAAAAEgAAAABAAAASAAAAAEAA6ABAAMAAAABAAEAAKACAAQAAAABAAAADKADAAQAAAABAAAAEwAAAAAChpcNAAAACXBIWXMAAAsTAAALEwEAmpwYAAABWWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyI+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3JpZW50YXRpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgpMwidZAAABqElEQVQoFY3SPUvDQBgH8BREpRHExYiDgmLFl6WC+AYmWeyLg4i7buJX8DMpOujgyxGvUYeCgzhUQUSKKLUS0+ZyptXh8Z5Ti621ekPyJHl+uftfomhaf9Ei5JyxXKfynyEA6EYcLHpwyflT958GAQ7DTABNHd8EbtDbEH2BD5QEQmi2mM8P/Iq+A0SzszEg+3sPjDnDdVEtQKQbMUidHD3xVzf6A9UDEmEm+8h9KTqTVUjT+vB53aHrCbAPiceYq1dQI1Aqv4EhMll0jzv+Y0yiRgCnLRSYyDQHVoqUXe4uKL9l+L7GXC4vkMhE6eW/AOJs9k583ORDUyXMZ8F5SVHVVnllmPNKSFagAJ5DofaqGXw/gHBYg51dIldkmknY3tguv3jOtHR4+MqAzaraJXbEhqHhcQlwGSOi5pytVQHZLN5s0WNe8HPrLYlFsO20RPHkImxsbmHdLJFI76th7Z4SeuF53hTeFLvhRCJRCTKZKxgdnRDbW+iozFJbBMw14/ElwGYc0egMBMFzT21f5Rog33Z7dX02GBm7WV5ZfT5Nn5bE3zuCDe9UxdTpNvK+5AAAAABJRU5ErkJggg==';
+
+  const CURSOR_PARTICLE_COUNT = 15;
+  const CURSOR_RATE = 0.4;
+
+  const cursorImage = new Image();
+  cursorImage.src = CURSOR_PARTICLE_SRC;
+
+  const trailCanvas = document.createElement('canvas');
+  trailCanvas.id = 'trailing-cursor-canvas';
+  trailCanvas.width = window.innerWidth;
+  trailCanvas.height = window.innerHeight;
+  document.body.appendChild(trailCanvas);
+  const trailCtx = trailCanvas.getContext('2d');
+
+  window.addEventListener('resize', ()=>{
+    trailCanvas.width = window.innerWidth;
+    trailCanvas.height = window.innerHeight;
+  });
+
+  let cursorPos = { x: window.innerWidth/2, y: window.innerHeight/2 };
+  let cursorParticles = [];
+  let cursorParticlesInitted = false;
+
+  window.addEventListener('mousemove', e=>{
+    cursorPos.x = e.clientX;
+    cursorPos.y = e.clientY;
+    if(!cursorParticlesInitted){
+      cursorParticlesInitted = true;
+      for(let i=0;i<CURSOR_PARTICLE_COUNT;i++){
+        cursorParticles.push({ x: cursorPos.x, y: cursorPos.y });
+      }
+    }
+  });
+
+  (function trailLoop(){
+    requestAnimationFrame(trailLoop);
+    trailCtx.clearRect(0,0,trailCanvas.width,trailCanvas.height);
+    if(!cursorParticlesInitted || !cursorImage.complete) return;
+    let x = cursorPos.x, y = cursorPos.y;
+    cursorParticles.forEach((p, i)=>{
+      const next = cursorParticles[i+1] || cursorParticles[0];
+      p.x = x; p.y = y;
+      trailCtx.drawImage(cursorImage, p.x, p.y);
+      x += (next.x - p.x) * CURSOR_RATE;
+      y += (next.y - p.y) * CURSOR_RATE;
+    });
+  })();
+}
+
+(function animate(ts){
+  requestAnimationFrame(animate);
+  uniforms.uTime.value=ts*0.001;
+  if(uniforms.uBlend.value<1){
+    const t=Math.min((ts-transitionStart)/TRANS_DUR,1);
+    uniforms.uBlend.value=1-(1-t)*(1-t)*(1-t);
+  }
+  renderer.render(scene,camera);
+})();
+
+const stageEl = document.getElementById('stage');
+let mouseX=0, mouseY=0, tiltX=0, tiltY=0;
+if(!isTouchDevice){
+  window.addEventListener('mousemove', e=>{
+    mouseX=(e.clientX/window.innerWidth-0.5)*2;
+    mouseY=(e.clientY/window.innerHeight-0.5)*2;
+  });
+  window.addEventListener('mouseleave',()=>{ mouseX=0; mouseY=0; });
+  (function tiltLoop(){
+    requestAnimationFrame(tiltLoop);
+    tiltX+=(mouseX-tiltX)*0.05; tiltY+=(mouseY-tiltY)*0.05;
+    const rx=tiltY*4, ry=-tiltX*4, tx=tiltX*10, ty=tiltY*6;
+    stageEl.style.transform=`perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg) translate(${tx}px,${ty}px)`;
+  })();
+}
+</script>
+</body>
+</html>
