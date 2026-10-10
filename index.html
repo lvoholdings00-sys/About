@@ -379,7 +379,7 @@ html,body{width:100%;height:100%;height:100dvh;background:#000;overflow:hidden;f
 
 <style id="lvo-hover-colors">
 /* ---- hover colour coding: divisions = their own colour, everything else = red ---- */
-:root{--c-vindex:#C8A96E;--c-alliance:#A359EC;--c-operations:#1D9E75;--c-careers:#7CC8F5;--c-hover-red:#ff6b6b;}
+:root{--c-vindex:#C8A96E;--c-alliance:#A359EC;--c-operations:#1D9E75;--c-careers:#C3C9D3;--g-careers:linear-gradient(120deg,#8f98a6 0%,#f4f6f9 35%,#aab2bf 55%,#eef0f4 75%,#8a93a1 100%);--c-hover-red:#ff6b6b;}
 
 /* menu overlay: default hover = red (LVO-O, About, Connect) */
 :is(#site-menu,#siteMenu) li a:is(:hover,:active,:focus-visible){color:var(--c-hover-red);}
@@ -388,7 +388,7 @@ html,body{width:100%;height:100%;height:100dvh;background:#000;overflow:hidden;f
 :is(#site-menu,#siteMenu) li a[href$="/vindex/"]:is(:hover,:active,:focus-visible){color:var(--c-vindex);}
 :is(#site-menu,#siteMenu) li a[href$="/alliance/"]:is(:hover,:active,:focus-visible){color:var(--c-alliance);}
 :is(#site-menu,#siteMenu) li a[href$="/operations/"]:is(:hover,:active,:focus-visible){color:var(--c-operations);}
-:is(#site-menu,#siteMenu) li a[href$="/careers/"]:is(:hover,:active,:focus-visible){color:var(--c-careers);}
+:is(#site-menu,#siteMenu) li a[href$="/careers/"]:is(:hover,:active,:focus-visible){color:transparent;background:var(--g-careers);-webkit-background-clip:text;background-clip:text;text-shadow:none;}
 </style>
 
 <style id="about-redesign">
@@ -460,7 +460,27 @@ html,body{width:100%;height:100%;height:100dvh;background:#000;overflow:hidden;f
   #slide-content[data-type="values"] .slide-list,
   #slide-content[data-type="timeline"] .slide-list{display:flex}
 }
+
+/* ---- rune button: no sticky highlight / box after closing the menu (mouse + touch) ---- */
+#menu-btn:focus,.menu-btn:focus{outline:none}
+html:not(.kb-nav) #menu-btn:focus-visible:not(:hover),html:not(.kb-nav) .menu-btn:focus-visible:not(:hover){color:#fff;outline:none}
+html:not(.kb-nav) #menu-btn:focus-visible:not(:hover) .rune,html:not(.kb-nav) .menu-btn:focus-visible:not(:hover) .rune{filter:drop-shadow(0 0 5px rgba(0,0,0,.85))}
+@media(hover:none){
+  #menu-btn:hover,.menu-btn:hover{color:#fff}
+  #menu-btn:hover .rune,.menu-btn:hover .rune{filter:drop-shadow(0 0 5px rgba(0,0,0,.85))}
+}
 </style>
+<script id="lvo-kbnav">
+(function(){
+  var r=document.documentElement;
+  addEventListener('keydown',function(e){var k=e.key||'';if(k==='Tab'||k==='Enter'||k===' '||k.indexOf('Arrow')===0)r.classList.add('kb-nav');},true);
+  ['pointerdown','mousedown','touchstart'].forEach(function(t){addEventListener(t,function(){r.classList.remove('kb-nav');},true);});
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.querySelector('#menu-btn,#menuBtn');
+    if(b)b.addEventListener('click',function(){if(!r.classList.contains('kb-nav'))setTimeout(function(){b.blur();},0);});
+  });
+})();
+</script>
 </head>
 <body>
 
