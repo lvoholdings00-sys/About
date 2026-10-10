@@ -27,7 +27,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{--white:#fff;--dim:rgba(255,255,255,0.5);--dimmer:rgba(255,255,255,0.25);--purple:#7F77DD;--red-hi:#CC2020;--chrome:#C8C8D0;}
-html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Times New Roman',Georgia,serif;user-select:none;}
+html,body{width:100%;height:100%;height:100dvh;background:#000;overflow:hidden;font-family:'Times New Roman',Georgia,serif;user-select:none;}
 
 @media (pointer:coarse){ body{cursor:auto;} }
 @media (pointer:fine){ body{cursor:none;} }
@@ -280,6 +280,101 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Ti
 .slide-quote-attr{
   font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;letter-spacing:.35em;color:#FF5A5A;
 }
+
+/* ---------- crest in title ---------- */
+.title-crest{width:26px;height:26px;object-fit:contain;margin-right:12px;flex-shrink:0;filter:drop-shadow(0 0 8px rgba(0,0,0,.9)) drop-shadow(0 0 10px rgba(204,32,32,.25));transition:transform .5s ease,filter .5s ease;}
+#title a:hover .title-crest{transform:rotate(8deg) scale(1.08);filter:drop-shadow(0 0 8px rgba(0,0,0,.9)) drop-shadow(0 0 14px rgba(204,32,32,.55));}
+
+/* ---------- refined content card ---------- */
+.slide-inner{
+  position:relative;
+  background:linear-gradient(180deg,rgba(10,6,6,.82) 0%,rgba(0,0,0,.78) 55%,rgba(8,4,4,.86) 100%);
+  border:.5px solid rgba(255,255,255,.08);
+  border-top:1px solid rgba(204,32,32,.55);
+  border-radius:3px;
+  box-shadow:0 30px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.04);
+  -webkit-backdrop-filter:blur(10px) saturate(1.1);backdrop-filter:blur(10px) saturate(1.1);
+  scrollbar-width:thin;scrollbar-color:rgba(204,32,32,.45) transparent;
+}
+.slide-inner .slide-heading-stack{
+  position:relative;padding-bottom:1.6rem;margin-bottom:1.6rem;
+}
+.slide-inner .slide-heading-stack::after{
+  content:'᛭';display:block;margin:1.1rem auto 0;width:100%;
+  font-family:'Cinzel',serif;font-size:14px;line-height:1;color:#FF5A5A;letter-spacing:0;
+  text-shadow:0 0 14px rgba(204,32,32,.7);
+  background:linear-gradient(90deg,transparent,rgba(255,90,90,.55) 42%,transparent 42.5%,transparent 57.5%,rgba(255,90,90,.55) 58%,transparent) center 50%/100% 1px no-repeat;
+}
+.slide-list-item{
+  position:relative;padding:1.2rem 1rem 1.1rem 1.2rem;border-top:0;
+  border-left:1px solid rgba(255,90,90,.28);
+  background:linear-gradient(90deg,rgba(204,32,32,.06),transparent 70%);
+  transition:background .4s ease,border-color .4s ease,transform .4s ease;
+}
+.slide-list-item:hover{border-left-color:#FF5A5A;background:linear-gradient(90deg,rgba(204,32,32,.13),transparent 80%);transform:translateX(3px);}
+.slide-list-num{font-size:.8rem;letter-spacing:.4em;text-shadow:0 0 12px rgba(204,32,32,.6);}
+.slide-list-title{font-size:1.05rem;letter-spacing:.18em;}
+.slide-quote{position:relative;}
+.slide-quote::before{content:'“';display:block;font-family:'IM Fell English',serif;font-size:4rem;line-height:.6;color:rgba(255,90,90,.6);margin-bottom:.4rem;}
+.slide-lvo{text-shadow:0 0 40px rgba(204,32,32,.35);}
+.slide-eyebrow{display:flex;align-items:center;justify-content:center;gap:1rem;}
+.slide-eyebrow::before,.slide-eyebrow::after{content:'';height:1px;width:clamp(18px,6vw,48px);background:linear-gradient(90deg,transparent,rgba(255,90,90,.7));}
+.slide-eyebrow::after{transform:scaleX(-1);}
+
+/* staggered reveal */
+@keyframes slideRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#slide-content.visible .slide-heading-stack,
+#slide-content.visible .slide-list-item,
+#slide-content.visible .slide-quote,
+#slide-content.visible .slide-quote-attr,
+#slide-content.visible .slide-eyebrow,
+#slide-content.visible .slide-lvo,
+#slide-content.visible .slide-subtitle,
+#slide-content.visible .slide-body-text{animation:slideRise .8s cubic-bezier(.16,1,.3,1) both;}
+#slide-content.visible .slide-list-item:nth-child(1){animation-delay:.15s}
+#slide-content.visible .slide-list-item:nth-child(2){animation-delay:.28s}
+#slide-content.visible .slide-list-item:nth-child(3){animation-delay:.41s}
+#slide-content.visible .slide-list-item:nth-child(4){animation-delay:.54s}
+#slide-content.visible .slide-quote{animation-delay:.2s}
+#slide-content.visible .slide-quote-attr{animation-delay:.45s}
+#slide-content.visible .slide-body-text{animation-delay:.3s}
+@media(prefers-reduced-motion:reduce){
+  #slide-content.visible *{animation:none!important}
+}
+
+/* ---------- mobile ---------- */
+@media(max-width:768px){
+  #title{padding-top:calc(env(safe-area-inset-top,0px) + 16px);}
+  .title-crest{width:22px;height:22px;margin-right:10px;}
+  #return-link{padding-top:calc(env(safe-area-inset-top,0px) + 16px);}
+  #slide-content{
+    align-items:flex-start;
+    padding:calc(env(safe-area-inset-top,0px) + 4.4rem) .9rem calc(env(safe-area-inset-bottom,0px) + 6.6rem);
+  }
+  .slide-inner{
+    max-height:100%;padding:1.3rem 1.1rem 1.6rem;
+    -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 28px),transparent);
+    mask-image:linear-gradient(to bottom,#000 calc(100% - 28px),transparent);
+    overscroll-behavior:contain;
+  }
+  .slide-heading-stack{font-size:clamp(28px,9vw,40px);margin-bottom:1.2rem;}
+  .slide-inner .slide-heading-stack{padding-bottom:1.1rem;margin-bottom:1.2rem;}
+  .slide-list{gap:1rem;}
+  .slide-list-item{padding:1rem .9rem 1rem 1rem;}
+  .slide-list-title{font-size:.92rem;letter-spacing:.14em;}
+  .slide-list-text,.slide-body-text{font-size:1.06rem;line-height:1.65;}
+  .slide-quote{font-size:clamp(1.15rem,5.2vw,1.5rem);line-height:1.6;}
+  .slide-lvo{font-size:clamp(2rem,10vw,3rem);}
+  .slide-subtitle{margin-bottom:1.4rem;letter-spacing:.28em;}
+  .slide-eyebrow{font-size:9px;letter-spacing:.28em;}
+  #legal-links{bottom:calc(env(safe-area-inset-bottom,0px) + 54px);}
+  #screen-controller{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 14px);}
+  .numerator{padding:6px clamp(7px,2.4vw,10px) 12px;}
+}
+@media(max-width:380px){
+  .slide-list-text,.slide-body-text{font-size:1rem;}
+  #title a::before{font-size:12px;}
+}
 </style>
 </head>
 <body>
@@ -298,7 +393,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Ti
 
   <div id="title">
     <a href="https://wearelvo.com/" id="title-link">
-      <span style="letter-spacing:0.3em;">Legion V. Omni-Operations</span>
+      <img class="title-crest" src="assets/logo.png" alt="" width="26" height="26" decoding="async"><span style="letter-spacing:0.3em;">Legion V. Omni-Operations</span>
       <span id="title-indicator"></span>
     </a>
   </div>
