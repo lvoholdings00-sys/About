@@ -19,11 +19,11 @@
   }
 })();
 </script>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1">
 <title>About · LVO Holdings</title>
 <meta name="description" content="LVO Holdings — About Legion V. Omni-Operations.">
 <link rel="icon" type="image/png" href="assets/logo.png">
-<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;600;700;900&family=Cormorant+SC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&display=swap" rel="stylesheet">
+
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{--white:#fff;--dim:rgba(255,255,255,0.5);--dimmer:rgba(255,255,255,0.25);--purple:#7F77DD;--red-hi:#CC2020;--chrome:#C8C8D0;}
@@ -481,7 +481,14 @@ html:not(.kb-nav) #menu-btn:focus-visible:not(:hover) .rune,html:not(.kb-nav) .m
   });
 })();
 </script>
-</head>
+<meta name="lvo-fonts" content="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&amp;family=Cinzel:wght@400;600;700;900&amp;family=Cormorant+SC:wght@300;400;500&amp;family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&amp;display=swap"><style id="lvo-about-polish">
+#legal-links a{color:rgba(255,255,255,.82)!important;text-shadow:0 1px 8px #000;opacity:1!important}
+#legal-links a:hover,#legal-links a:focus-visible{color:#fff!important}
+@media(max-width:768px){#legal-links a{font-size:9px!important;letter-spacing:.16em!important}}
+#slide-content::after{content:"Scroll \2193";position:absolute;left:50%;bottom:3.4rem;transform:translateX(-50%);font:600 9px 'Cinzel',serif;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.8);background:rgba(0,0,0,.6);padding:7px 11px;border:.5px solid rgba(255,255,255,.22);opacity:0;pointer-events:none;transition:opacity .3s;z-index:2}
+#slide-content[data-more="1"]::after{opacity:1}
+@media(max-width:768px){#slide-content::after{bottom:calc(env(safe-area-inset-bottom,0px) + 7.2rem)}}
+</style></head>
 <body>
 
 <div id="loading-screen">
@@ -494,7 +501,7 @@ html:not(.kb-nav) #menu-btn:focus-visible:not(:hover) .rune,html:not(.kb-nav) .m
 <div id="site-wrap">
 
   <div id="stage"><canvas></canvas></div>
-  <video id="video-bg" src="https://assets.wearelvo.com/LVO.mp4" loop muted playsinline preload="auto"></video>
+  <video id="video-bg" src="https://assets.wearelvo.com/LVO.mp4" loop muted playsinline preload="metadata"></video>
 
   <div id="title">
     <a href="https://wearelvo.com/" id="title-link">
@@ -1050,5 +1057,14 @@ if(!isTouchDevice){
   })();
 }
 </script>
-</body>
+<script>
+/* shows a "Scroll" cue when the card has more text below the fold */
+(function(){var sc=document.getElementById('slide-content');if(!sc)return;
+function upd(){var i=sc.querySelector('.slide-inner');if(!i){sc.removeAttribute('data-more');return}
+var more=i.scrollHeight-i.clientHeight>8&&i.scrollTop+i.clientHeight<i.scrollHeight-8;
+if(more)sc.setAttribute('data-more','1');else sc.removeAttribute('data-more');}
+sc.addEventListener('scroll',upd,true);window.addEventListener('resize',upd);
+new MutationObserver(function(){setTimeout(upd,60)}).observe(sc,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+setTimeout(upd,500);})();
+</script><script src="assets/lvo-consent.js" defer></script></body>
 </html>
