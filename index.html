@@ -9,10 +9,11 @@
     return m ? decodeURIComponent(m[1]) : null;
   }
   var consent = getCookie('lvo_motion_consent');
+  var isBot = /bot|crawl|spider|slurp|mediapartners|facebookexternalhit|bingpreview|google-inspectiontool|lighthouse|headless/i.test(navigator.userAgent || '');
   window.__LVO_MOTION_CONSENT__ = consent;
 
   var justWarned = new URLSearchParams(location.search).get('warned') === '1';
-  if(!justWarned){
+  if(!justWarned && !consent && !isBot){
     location.replace('https://warning.wearelvo.com/?return=' + encodeURIComponent(location.origin + location.pathname));
   } else if(window.history && history.replaceState){
     history.replaceState({}, '', location.pathname);
@@ -21,6 +22,7 @@
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1">
 <title>About · LVO Holdings</title>
+<link rel="canonical" href="https://about.wearelvo.com/"><meta property="og:type" content="website"><meta property="og:title" content="About · LVO Holdings"><meta property="og:url" content="https://about.wearelvo.com/">
 <meta name="description" content="LVO Holdings — About Legion V. Omni-Operations.">
 <link rel="icon" type="image/png" href="assets/logo.png">
 
